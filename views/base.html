@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShareMyCode : {{ title }}</title>
+  <meta name="description"
+    content="A web app that facilitates realtime sharing of code editor using socket.io library." />
+
+  <!-- FAVICON -->
+  <link rel="shortcut icon" href="/favicon.png">
+
+  <!-- STYLESHEETS -->
+  <link rel="stylesheet" href="/library/bootstrap/bootstrap.min.css" />
+  <link rel="stylesheet" href="/library/boostrap-icons/bootstrap-icons.min.css" />
+  <link rel="stylesheet" href="/styles/base.css" />
+</head>
+
+<body>
+  <!-- <div id="pageLoader"></div> -->
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+      <a class="navbar-brand" href="/"><i class="bi bi-code-square"></i> ShareMyCode</a>
+      <ul class="navbar-nav ms-md-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="#"><i class="bi bi-github"></i> Github</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  {% block content %}{% endblock %}
+
+  <nav class="navbar fixed-bottom navbar-expand-lg navbar-dark bg-primary"></nav>
+
+  <!-- SCRIPTS -->
+  <script src="/library/jquery/jquery-3.6.0.min.js"></script>
+  <script src="/library/popper/popper.min.js"></script>
+  <script src="/library/bootstrap/bootstrap.min.js"></script>
+  <script src="/scripts/base.js"></script>
+</body>
+
+</html>

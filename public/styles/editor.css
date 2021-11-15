@@ -1,0 +1,40 @@
+.bubble {
+  margin: 30px;
+  position: relative;
+  max-width: 300px;
+}
+
+.bubble-left {
+  background-color: white;
+}
+
+.bubble-left:after {
+  content: " ";
+  position: absolute;
+  width: 0;
+  height: 0;
+  left: -20px;
+  right: auto;
+  top: 0px;
+  bottom: auto;
+  border: 22px solid;
+  border-color: white transparent transparent transparent;
+}
+
+.bubble-right {
+  background-color: #a9cce3;
+  margin-left: auto;
+}
+
+.bubble-right:after {
+  content: " ";
+  position: absolute;
+  width: 0;
+  height: 0;
+  right: -20px;
+  left: auto;
+  top: 0px;
+  bottom: auto;
+  border: 22px solid;
+  border-color: #a9cce3 transparent transparent transparent;
+}
