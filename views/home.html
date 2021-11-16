@@ -1,13 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container py-4">
-  <div class="p-2 mb-4 bg-dark">
-    <div class="container-fluid py-5 text-center">
-      <h1 class="display-5 fw-bold">Share code with other developers with ease</h1>
-      <p class="fs-4">An online code editor for interviews, troubleshooting, teaching & more…</p>
-      <button class="btn btn-primary btn-lg" type="button">Create room</button>
-      <button class="btn btn-primary btn-lg" type="button">Join room</button>
+  <div class="container-fluid py-5 px-2 text-center">
+    <h1 class="display-5 fw-bold">Share code with other developers with ease</h1>
+    <p class="fs-4">An online code editor for interviews, troubleshooting, teaching & more…</p>
+    <div class="mt-4">
+      <a class="btn btn-primary btn-lg" href="/new-editor/" role="button">Start sharing</a>
     </div>
   </div>
 </div>
+<!-- <div class="bubble bubble-right">
+  <div class="px-3 py-1">
+    <div class="text-left"><small class="text-muted">~' + data.username + '</small></div>
+    <div class="text-left">' + data.message + '</div>
+    <div class="text-left"><small class="text-muted">' + time + '</small></div>
+  </div>
+</div> -->
 {% endblock %}

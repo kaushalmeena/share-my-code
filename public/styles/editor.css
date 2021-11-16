@@ -1,11 +1,17 @@
+.toolbar {
+  position: absolute;
+  top: 56px;
+  right: 0;
+}
+
 .bubble {
-  margin: 30px;
   position: relative;
-  max-width: 300px;
+  margin: 20px 20px;
+  max-width: 250px;
 }
 
 .bubble-left {
-  background-color: white;
+  background-color: #343a40;
 }
 
 .bubble-left:after {
@@ -18,11 +24,11 @@
   top: 0px;
   bottom: auto;
   border: 22px solid;
-  border-color: white transparent transparent transparent;
+  border-color: #343a40 transparent transparent transparent;
 }
 
 .bubble-right {
-  background-color: #a9cce3;
+  background-color: #4c9be8;
   margin-left: auto;
 }
 
@@ -36,5 +42,19 @@
   top: 0px;
   bottom: auto;
   border: 22px solid;
-  border-color: #a9cce3 transparent transparent transparent;
+  border-color: #4c9be8 transparent transparent transparent;
+}
+
+.editor-container {
+  position: relative;
+  overflow: auto;
+  height: calc(100vh - 56px);
+}
+
+.code-editor {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
 }

@@ -1,63 +1,86 @@
-var socket;
-var userId;
-var username = "";
+const codeEditor = ace.edit("codeEditor");
+const modeList = ace.require("ace/ext/modelist");
 
-$(document).ready(function () {
-  socket = io.connect(location.protocol + '//' + location.host);
-  userId = Math.random().toString(36).substr(2, 8);
+const modeSelect = document.getElementById("modeSelect");
+const tabSizeSelect = document.getElementById("tabSizeSelect");
+const fontSizeSelect = document.getElementById("fontSizeInput");
+const themeSelect = document.getElementById("themeSelect");
 
-  socket.on("connected", function (data) {
-    $("#chatGroup").append('<div class="text-center">' + data.username + ' has joined chat group.</div>');
-  });
+const shareInput = document.getElementById("shareInput");
 
-  socket.on("message", function (data) {
-    var date = new Date();
-    var time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+const downloadButton = document.getElementById("downloadButton");
 
-    if (data.userId === userId) {
-      $("#chatGroup").append('<div class="bubble bubble-right shadow-sm"><div class="px-3 py-1"><div class="text-left"><small class="text-muted">~' + data.username + '</small></div><div class="text-left">' + data.message + '</div><div class="text-left"><small class="text-muted">' + time + '</small></div></div></div>');
-    } else {
-      $("#chatGroup").append('<div class="bubble bubble-left shadow-sm"><div class="px-3 py-1"><div class="text-right"><small class="text-muted">~' + data.username + '</small></div><div class="text-left">' + data.message + '</div><div class="text-right"><small class="text-muted">' + time + '</small></div></div></div>');
-    }
-
-    $("#chatGroup").animate({ scrollTop: $("#chatGroup").height() }, 500);
-  });
-
-  socket.on("disconnected", function (data) {
-    $("#chatGroup").append('<div class="text-center">' + data.username + ' has left the chat group.</div>');
-  });
-
-  $("#pageLoader").fadeOut('fast');
-
-  $("#chatModal").modal('show');
+onDocumentReady(function () {
+  shareInput.value = window.location.href;
 });
 
-$(window).on('beforeunload', function () {
-  socket.emit('disconnected', { username: username });
+modeSelect.addEventListener("change", function (event) {
+  setCodeEditorOption("mode", event.target.value);
 });
 
-$("#sendButton").click(function () {
-  socket.emit('message', {
-    userId: userId,
-    username: username,
-    message: $("#chatInput").val()
-  });
-
-  $("#chatInput").val("");
+tabSizeSelect.addEventListener("change", function (event) {
+  setCodeEditorOption("tabSize", event.target.value);
 });
 
-$("#chatInput").keypress(function (e) {
-  if (e.which == 13) {
-    $("#sendButton").click();
+fontSizeSelect.addEventListener("change", function (event) {
+  setCodeEditorOption("fontSize", event.target.value);
+});
+
+themeSelect.addEventListener("change", function (event) {
+  setCodeEditorOption("theme", event.target.value);
+});
+
+downloadButton.addEventListener("click", function (event) {
+  const content = codeEditor.getValue();
+  const extension = getExtentionForMode();
+  const filename = `myfile.${extension}`;
+  saveFile(content, filename, 'text/plain');
+});
+
+function initCodeEditor() {
+  codeEditor.setOptions({
+    mode: 'ace/mode/javascript',
+    tabSize: 4,
+    fontSize: 14,
+    theme: "ace/theme/monokai",
+    value: `console.log("Hello World!");`
+  })
+}
+
+function setCodeEditorOption(key, value) {
+  let finalValue = null;
+  if (key === "fontSize" || key === "tabSize") {
+    finalValue = parseInt(value)
+  } else {
+    finalValue = value;
   }
-});
+  codeEditor.setOption(key, finalValue);
+}
 
-$("#chatForm").submit(function () {
-  username = $("#formUsername").val();
+function getExtentionForMode() {
+  let result = "txt";
+  const mode = codeEditor.getOption("mode");
+  const modeItem = modeList.modes.find(function (item) { return item.mode === mode; });
+  if (modeItem) {
+    result = modeItem.extensions.split("|")[0];
+  }
+  return result;
+}
 
-  socket.emit('connected', { username: username });
+function saveFile(text, name, type) {
+  var a = document.createElement("a");
+  var file = new Blob([text], { type: type });
+  a.href = URL.createObjectURL(file);
+  a.download = name;
+  a.click();
+}
 
-  $("#chatModal").modal('hide');
+function onDocumentReady(fn) {
+  if (document.readyState != 'loading') {
+    fn();
+  } else {
+    document.addEventListener('DOMContentLoaded', fn);
+  }
+}
 
-  return false;
-});
+initCodeEditor();

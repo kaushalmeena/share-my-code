@@ -1,0 +1,21 @@
+<div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="shareModalLabel">Share</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Anyone with access to this URL will be invited to this editor.</p>
+        <label for="shareInput" class="form-label">Share this URL</label>
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" id="shareInput" value="{{ host }}/editor/{{ roomId }}/" readonly>
+          <button class="btn btn-primary" type="button" id="copyButton"><i class="bi bi-clipboard"></i></button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
