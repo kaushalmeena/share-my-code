@@ -22,12 +22,23 @@ app.use('/', express.static(PUBLIC_FOLDER));
 app.set('views', VIEWS_FOLDER);
 app.set('view engine', 'html');
 
+app.get('/new-editor/', function (req, res) {
+  const newRoomId = Math.random().toString(16).substring(8);
+  res.redirect(`/editor/${newRoomId}/`);
+});
+
 app.get('/', function (req, res) {
   res.render('home', {
     title: "Home"
   });
 });
 
+app.get('/editor/:roomId/', function (req, res) {
+  res.render('editor', {
+    title: "Editor",
+    roomId: req.params.roomId
+  });
+});
 
 var server = app.listen(PORT, function () {
   console.log("Express server listening on port http://localhost:%d", this.address().port);
