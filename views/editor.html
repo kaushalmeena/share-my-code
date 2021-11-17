@@ -1,9 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
 <link rel="stylesheet" href="/styles/editor.css" />
+
+<div id="toastContainer" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
+
 <div class="editor-container">
   <div id="codeEditor" class="code-editor"></div>
 </div>
+
 <div class="btn-group-vertical toolbar">
   <button title="Share this room" type="button" class="btn btn-secondary btn-lg" data-bs-toggle="modal"
     data-bs-target="#shareModal">
@@ -13,13 +17,21 @@
     data-bs-target="#offCanvasSettings" aria-controls="offCanvasSettings">
     <i class="bi bi-gear-fill fs-4"></i>
   </button>
-  <button title="Show everyone" type="button" class="btn btn-secondary btn-lg" data-bs-toggle="offcanvas"
-    data-bs-target="#offCanvasPeople" aria-controls="offCanvasPeople">
+  <button title="Show everyone" type="button" class="btn btn-secondary btn-lg position-relative"
+    data-bs-toggle="offcanvas" data-bs-target="#offCanvasPeople" aria-controls="offCanvasPeople">
     <i class="bi bi-people-fill fs-4"></i>
+    <span id="peopleCount" class="badge rounded-pill bg-primary position-absolute top-0 start-0 translate-middle"
+      style="z-index: 10;">
+      0
+    </span>
   </button>
   <button title="Chat with everyone" type="button" class="btn btn-secondary btn-lg" data-bs-toggle="offcanvas"
     data-bs-target="#offCanvasChat" aria-controls="offCanvasChat">
     <i class="bi bi-chat-dots-fill fs-4"></i>
+    <span id="messageCount" class="badge rounded-pill bg-danger position-absolute top-0 start-0 translate-middle"
+      style="z-index: 10;" hidden>
+      0
+    </span>
   </button>
   <button title="Download this code" type="button" id="downloadButton" class="btn btn-secondary btn-lg">
     <i class="bi bi-file-earmark-arrow-down-fill fs-4"></i>
@@ -31,6 +43,7 @@
 
 <!-- MODAL :::::: SHARE -->
 {% include "modal/share.html" %}
+{% include "modal/join.html" %}
 
 <!-- SIDEBAR :::: SETTINGS -->
 {% include "sidebar/settings.html" %}
@@ -43,5 +56,6 @@
 
 <script src="/library/ace/ace.js"></script>
 <script src="/library/ace/ext-modelist.js"></script>
+<script src="/socket.io/socket.io.js"></script>
 <script src="/scripts/editor.js"></script>
 {% endblock %}

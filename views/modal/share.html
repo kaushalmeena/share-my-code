@@ -7,14 +7,13 @@
       </div>
       <div class="modal-body">
         <p>Anyone with access to this URL will be invited to this editor.</p>
-        <label for="shareInput" class="form-label">Share this URL</label>
-        <div class="input-group mb-3">
-          <input type="text" class="form-control" id="shareInput" value="{{ host }}/editor/{{ roomId }}/" readonly>
-          <button class="btn btn-primary" type="button" id="copyButton"><i class="bi bi-clipboard"></i></button>
+        <div class="mb-3">
+          <label for="shareInput" class="form-label">Share this URL</label>
+          <input type="text" class="form-control" id="shareInput" readonly>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" id="copyButton" class="btn btn-primary" data-bs-dismiss="modal">Copy</button>
       </div>
     </div>
   </div>

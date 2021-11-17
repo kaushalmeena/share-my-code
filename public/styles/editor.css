@@ -51,6 +51,15 @@
   height: calc(100vh - 56px);
 }
 
+.toast-container {
+  z-index: 1;
+}
+
+.chat-container {
+  overflow: auto;
+  height: calc(100vh - 140px);
+}
+
 .code-editor {
   position: absolute;
   top: 0;
