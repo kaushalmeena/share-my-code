@@ -211,7 +211,11 @@ function createChatBubble(username, message, type = "right") {
 function createPeopleList(users) {
   let html = "";
   for (let i = 0; i < users.length; i++) {
-    html += `<li class="list-group-item list-group-item-action">${users[i].name}</li>`;
+    html += `
+      <li class="list-group-item list-group-item-action">
+        ${users[i].name}
+      </li>
+    `;
   }
   return html;
 }
