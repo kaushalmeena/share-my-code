@@ -1,35 +1,37 @@
-{% extends "base.html" %}
-{% block content %}
-<link rel="stylesheet" href="/styles/editor.css" />
+{% extends "layout.html" %}
 
-<div id="toastContainer" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
+{% block styles %}
+<link rel="stylesheet" href="/styles/editor.css" />
+{% endblock %}
+
+{% block content %}
+<div id="toastContainer" class="toast-container"></div>
 
 <div class="editor-container">
   <div id="codeEditor" class="code-editor"></div>
 </div>
 
-<div class="btn-group-vertical toolbar">
+<div class="btn-group-toolbar btn-group-vertical">
   <button title="Share this room" type="button" class="btn btn-secondary btn-lg" data-bs-toggle="modal"
     data-bs-target="#shareModal">
     <i class="bi bi-send-plus-fill fs-4"></i>
   </button>
   <button title="Show settings" type="button" class="btn btn-secondary btn-lg" data-bs-toggle="offcanvas"
-    data-bs-target="#offCanvasSettings" aria-controls="offCanvasSettings">
+    data-bs-target="#settingsDrawer" aria-controls="settingsDrawer">
     <i class="bi bi-gear-fill fs-4"></i>
   </button>
   <button title="Show everyone" type="button" class="btn btn-secondary btn-lg position-relative"
-    data-bs-toggle="offcanvas" data-bs-target="#offCanvasPeople" aria-controls="offCanvasPeople">
+    data-bs-toggle="offcanvas" data-bs-target="#peopleDrawer" aria-controls="peopleDrawer">
     <i class="bi bi-people-fill fs-4"></i>
-    <span id="peopleCount" class="badge rounded-pill bg-primary position-absolute top-0 start-0 translate-middle"
-      style="z-index: 10;">
+    <span id="activePeopleCount" class="badge rounded-pill bg-primary position-absolute top-0 start-0 translate-middle">
       0
     </span>
   </button>
   <button title="Chat with everyone" type="button" class="btn btn-secondary btn-lg" data-bs-toggle="offcanvas"
-    data-bs-target="#offCanvasChat" aria-controls="offCanvasChat">
+    data-bs-target="#chatDrawer" aria-controls="chatDrawer">
     <i class="bi bi-chat-dots-fill fs-4"></i>
-    <span id="messageCount" class="badge rounded-pill bg-danger position-absolute top-0 start-0 translate-middle"
-      style="z-index: 10;" hidden>
+    <span id="unreadMessageCount" class="badge rounded-pill bg-danger position-absolute top-0 start-0 translate-middle"
+      hidden>
       0
     </span>
   </button>
@@ -41,19 +43,18 @@
   </a>
 </div>
 
-<!-- MODAL :::::: SHARE -->
+<!-- DRAWERS -->
+{% include "drawer/settings.html" %}
+{% include "drawer/people.html" %}
+{% include "drawer/chat.html" %}
+
+<!-- MODALS -->
 {% include "modal/share.html" %}
 {% include "modal/join.html" %}
 
-<!-- SIDEBAR :::: SETTINGS -->
-{% include "sidebar/settings.html" %}
+{% endblock %}
 
-<!-- SIDEBAR :::: PEOPLE -->
-{% include "sidebar/people.html" %}
-
-<!-- SIDEBAR :::: CHAT -->
-{% include "sidebar/chat.html" %}
-
+{% block scripts %}
 <script src="/library/ace/ace.js"></script>
 <script src="/library/ace/ext-modelist.js"></script>
 <script src="/socket.io/socket.io.js"></script>

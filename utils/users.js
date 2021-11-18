@@ -1,19 +1,19 @@
 const USERS = [];
 
 function addUser(id, name, room) {
-  const existingUser = USERS.find(user => user.name.trim().toLowerCase() === name.trim().toLowerCase())
+  const existingUser = USERS.find((user) => user.name === name);
 
   if (existingUser) {
     return { error: "Username has already been taken" };
   }
   if (!name && !room) {
-    return { error: "Username and RoomId are required" };
+    return { error: "Username and Room are required" };
   }
   if (!name) {
     return { error: "Username is required" };
   }
   if (!room) {
-    return { error: "RoomId is required" };
+    return { error: "Room is required" };
   }
 
   const user = { id, name, room };
@@ -23,7 +23,7 @@ function addUser(id, name, room) {
 }
 
 function getUser(id) {
-  return USERS.find(user => user.id == id);
+  return USERS.find((user) => user.id == id);
 }
 
 function deleteUser(id) {

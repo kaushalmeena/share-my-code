@@ -1,8 +1,8 @@
 {
-  "name": "share-my-code",
+  "name": "myapp-sharemycode",
   "version": "1.0.0",
   "description": "A web app that facilitates realtime sharing of code editor using socket.io library.",
-  "repository": "git@github.com:kaushalmeena/share-my-code.git",
+  "repository": "git@github.com:kaushalmeena/myapp-sharemycode.git",
   "author": "Kaushal Meena <kaushal.meena1996@gmail.com>",
   "license": "MIT",
   "scripts": {

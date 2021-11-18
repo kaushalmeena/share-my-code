@@ -14,16 +14,20 @@
   <!-- STYLESHEETS -->
   <link rel="stylesheet" href="/library/bootstrap/bootstrap.min.css" />
   <link rel="stylesheet" href="/library/boostrap-icons/bootstrap-icons.min.css" />
+  {% block styles %}
+  {% endblock %}
 </head>
 
 <body>
 
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="/"><i class="bi bi-code-square"></i> ShareMyCode</a>
+      <a class="navbar-brand" href="/">
+        <i class="bi bi-code-square"></i> ShareMyCode
+      </a>
       <ul class="navbar-nav ms-md-auto">
         <li class="nav-item">
-          <a class="nav-link" href="https://github.com/kaushalmeena/share-my-code">
+          <a class="nav-link" href="https://github.com/kaushalmeena/myapp-sharemycode">
             <i class="bi bi-github"></i> Github
           </a>
         </li>
@@ -31,11 +35,14 @@
     </div>
   </nav>
 
-  {% block content %}{% endblock %}
+  {% block content %}
+  {% endblock %}
 
   <!-- SCRIPTS -->
   <script src="/library/popper/popper.min.js"></script>
   <script src="/library/bootstrap/bootstrap.min.js"></script>
+  {% block scripts %}
+  {% endblock %}
 </body>
 
 </html>

@@ -13,11 +13,11 @@ To install and run this project you need:
 
 To set up everything in your local machine, you need to follow these steps:
 
-1. Clone this repo and then change directory to the `share-my-code` folder:
+1. Clone this repo and then change directory to the `myapp-sharemycode` folder:
 
 ```bash
-$ git clone https://github.com/kaushalmeena/share-my-code.git
-$ cd share-my-code
+$ git clone https://github.com/kaushalmeena/myapp-sharemycode.git
+$ cd myapp-sharemycode
 ```
 
 2. Install project dependencies using npm:
