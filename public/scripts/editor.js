@@ -110,7 +110,7 @@ onDocumentReady(() => {
   chatButton.addEventListener("click", () => {
     const username = usernameInput.value;
     const message = chatInput.value;
-    const messageHTML = createChatBubble(username, message, "right");
+    const messageHTML = createChatMessage(username, message, "right");
     chatContainer.innerHTML += messageHTML;
     chatContainer.scrollTo({ top: chatContainer.scrollHeight });
     socket.emit("sendMessage", message);
@@ -131,8 +131,8 @@ onDocumentReady(() => {
       unreadMessageCount.hidden = false;
       unreadMessageCount.textContent = Number.parseInt(unreadMessageCount.textContent) + 1;
     }
-    const bubbleHTML = createChatBubble(username, message, "left")
-    chatContainer.innerHTML += bubbleHTML;
+    const messageHTML = createChatMessage(username, message, "left")
+    chatContainer.innerHTML += messageHTML;
     chatContainer.scrollTo({ top: chatContainer.scrollHeight });
   });
 
@@ -169,8 +169,8 @@ function getFileExtention() {
 }
 
 function saveFile(text, name, type) {
-  var a = document.createElement("a");
-  var file = new Blob([text], { type: type });
+  const a = document.createElement("a");
+  const file = new Blob([text], { type: type });
   a.href = URL.createObjectURL(file);
   a.download = name;
   a.click();
@@ -179,11 +179,11 @@ function saveFile(text, name, type) {
 function showToast(message, container) {
   const toastHTML = createToast(message);
   const toastEl = createHTMLElement(toastHTML);
+  const Toast = bootstrap.Toast.getOrCreateInstance(toastEl, { delay: 2000 });
   container.append(toastEl);
-  const toast = bootstrap.Toast.getOrCreateInstance(toastEl, { delay: 2000 });
-  toast.show();
+  Toast.show();
   setTimeout(() => {
-    toast.dispose();
+    Toast.dispose();
     toastEl.remove();
   }, 3000);
 }
@@ -196,7 +196,7 @@ function createToast(message) {
   `;
 }
 
-function createChatBubble(username, message, type = "right") {
+function createChatMessage(username, message, type = "right") {
   const date = new Date();
   const time = date.toLocaleString("en-US", { hour: "numeric", minute: "numeric", hour12: true });
   return `

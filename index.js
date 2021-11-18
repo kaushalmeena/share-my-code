@@ -7,7 +7,7 @@ const { addUser, getUser, deleteUser, getUsersInRoom } = require("./utils/users"
 
 const app = express();
 
-const isDev = app.get("env") === "development";
+const DEVELOPMENT_MODE = app.get("env") === "development";
 
 const PORT = 3000;
 
@@ -17,8 +17,8 @@ const VIEWS_FOLDER = path.join(__dirname, "views");
 nunjucks.configure("views", {
   autoescape: true,
   express: app,
-  watch: isDev,
-  noCache: isDev
+  watch: DEVELOPMENT_MODE,
+  noCache: DEVELOPMENT_MODE
 });
 
 app.use(compression());

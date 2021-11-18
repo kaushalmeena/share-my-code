@@ -34,7 +34,7 @@ function deleteUser(id) {
 }
 
 function getUsersInRoom(room) {
-  return USERS.filter(user => user.room === room);
+  return USERS.filter((user) => user.room === room);
 }
 
 module.exports = { addUser, getUser, deleteUser, getUsersInRoom };
