@@ -1,9 +1,11 @@
 const express = require("express");
+const compression = require("compression")
 const nunjucks = require("nunjucks");
-const app = express();
 const path = require("path");
 
 const { addUser, getUser, deleteUser, getUsersInRoom } = require("./utils/users");
+
+const app = express();
 
 const isDev = app.get("env") === "development";
 
@@ -19,14 +21,15 @@ nunjucks.configure("views", {
   noCache: isDev
 });
 
+app.use(compression());
 app.use("/", express.static(PUBLIC_FOLDER));
 
 app.set("views", VIEWS_FOLDER);
 app.set("view engine", "html");
 
 app.get("/new-editor/", (req, res) => {
-  const newRoomId = Math.random().toString(16).substring(8);
-  res.redirect(`/editor/${newRoomId}/`);
+  const newRoom = Math.random().toString(16).substring(8);
+  res.redirect(`/editor/${newRoom}/`);
 });
 
 app.get("/", (req, res) => {
@@ -35,7 +38,7 @@ app.get("/", (req, res) => {
   });
 });
 
-app.get("/editor/:roomId/", (req, res) => {
+app.get("/editor/:room/", (req, res) => {
   res.render("editor", {
     title: "Editor"
   });
@@ -49,16 +52,15 @@ const io = require("socket.io")(server);
 
 io.on("connection", (socket) => {
   socket.on("join", ({ name, room }, callback) => {
-    const { user, error } = addUser(socket.id, name, room)
+    const { user, error } = addUser(socket.id, name, room);
     if (error) {
       return callback(error);
     }
     socket.join(user.room)
     socket.in(room).emit("notification", `${user.name} just entered the room`)
-    io.in(room).emit("peopleChange", getUsersInRoom(room));
+    io.in(room).emit("usersChange", getUsersInRoom(room));
     callback();
   })
-
 
   socket.on("sendMessage", (message) => {
     const user = getUser(socket.id)
@@ -77,8 +79,8 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     const user = deleteUser(socket.id);
     if (user) {
-      io.in(user.room).emit("notification", `${user.name} just left the room`)
-      io.in(user.room).emit("peopleChange", getUsersInRoom(user.room))
+      io.in(user.room).emit("notification", `${user.name} just left the room`);
+      io.in(user.room).emit("usersChange", getUsersInRoom(user.room));
     }
   });
 });

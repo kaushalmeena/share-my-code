@@ -121,7 +121,7 @@ onDocumentReady(() => {
     unreadMessageCount.textContent = "0";
   });
 
-  socket.on("peopleChange", (users) => {
+  socket.on("usersChange", (users) => {
     activePeopleCount.innerHTML = users.length;
     activePeopleList.innerHTML = createPeopleList(users);
   });
