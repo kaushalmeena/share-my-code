@@ -2,14 +2,18 @@
 
 A web app that facilitates realtime sharing of code editor using socket.io library.
 
-## Requirements
+## Local Development
+
+These instructions will get you a copy of the project up and running on your local machine for development purposes. See deployment for notes on how to deploy the project on a live system.
+
+### Requirements
 
 To install and run this project you need:
 
 - [NodeJS](https://nodejs.org/ "NodeJS")
 - [git](https://git-scm.com/downloads "git") (only to clone this repository)
 
-## Installation
+### Installation
 
 To set up everything in your local machine, you need to follow these steps:
 
@@ -26,7 +30,7 @@ $ cd myapp-sharemycode
 $ npm install
 ```
 
-## Usage
+### Running
 
 To run the project simply run:
 
