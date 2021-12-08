@@ -1,0 +1,5 @@
+{
+  "name": "myapp-sharemycode",
+  "description": "A web app that facilitates realtime sharing of code editor using socket.io library.",
+  "repository": "https://github.com/kaushalmeena/myapp-sharemycode"
+}

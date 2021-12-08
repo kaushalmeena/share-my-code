@@ -2,6 +2,8 @@
 
 A web app that facilitates realtime sharing of code editor using socket.io library.
 
+Live version is deployed at [https://myapp-sharemycode.herokuapp.com/](https://myapp-sharemycode.herokuapp.com/)
+
 ## Local Development
 
 These instructions will get you a copy of the project up and running on your local machine for development purposes. See deployment for notes on how to deploy the project on a live system.
@@ -39,6 +41,21 @@ $ npm run dev
 ```
 
 Your app should now be running on [localhost:3000](http://localhost:3000/).
+
+## Deployment
+
+To push to Heroku you need to install the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) afterwards, you can run these commands:
+
+```bash
+$ heroku login
+$ heroku create
+$ git push heroku master
+$ heroku open
+```
+
+or
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
 ## License
 
