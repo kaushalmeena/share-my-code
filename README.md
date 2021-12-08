@@ -44,7 +44,7 @@ Your app should now be running on [localhost:3000](http://localhost:3000/).
 
 ## Deployment
 
-To push to Heroku you need to install the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) afterwards, you can run these commands:
+To push to Heroku you need to install the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) afterwards, you can run these commands after setting up the project locally:
 
 ```bash
 $ heroku login
