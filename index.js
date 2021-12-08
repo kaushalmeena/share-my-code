@@ -9,7 +9,7 @@ const app = express();
 
 const DEVELOPMENT_MODE = app.get("env") === "development";
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 const PUBLIC_FOLDER = path.join(__dirname, "public");
 const VIEWS_FOLDER = path.join(__dirname, "views");
