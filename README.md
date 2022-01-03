@@ -4,7 +4,7 @@ A web app that facilitates realtime sharing of code editor using socket.io libra
 
 Live version is deployed at [https://myapp-sharemycode.herokuapp.com/](https://myapp-sharemycode.herokuapp.com/)
 
-## Local Development
+## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development purposes. See deployment for notes on how to deploy the project on a live system.
 
