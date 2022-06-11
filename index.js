@@ -1,11 +1,14 @@
 const express = require("express");
-const compression = require("compression")
+const compression = require("compression");
 const nunjucks = require("nunjucks");
 const path = require("path");
-
-const { addUser, getUser, deleteUser, getUsersInRoom } = require("./utils/users");
+const http = require("http");
 
 const app = express();
+const server = http.createServer(app);
+const io = require("socket.io")(server);
+
+const store = require("./store/users");
 
 const DEVELOPMENT_MODE = app.get("env") === "development";
 
@@ -18,7 +21,7 @@ nunjucks.configure("views", {
   autoescape: true,
   express: app,
   watch: DEVELOPMENT_MODE,
-  noCache: DEVELOPMENT_MODE
+  noCache: DEVELOPMENT_MODE,
 });
 
 app.use(compression());
@@ -34,53 +37,53 @@ app.get("/new-editor/", (req, res) => {
 
 app.get("/", (req, res) => {
   res.render("home", {
-    title: "Home"
+    title: "Home",
   });
 });
 
 app.get("/editor/:room/", (req, res) => {
   res.render("editor", {
-    title: "Editor"
+    title: "Editor",
   });
 });
 
-const server = app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log("Express server listening on port http://localhost:%d", PORT);
 });
 
-const io = require("socket.io")(server);
-
 io.on("connection", (socket) => {
   socket.on("join", ({ name, room }, callback) => {
-    const { user, error } = addUser(socket.id, name, room);
+    const { user, error } = store.addUser(socket.id, name, room);
     if (error) {
       return callback(error);
     }
-    socket.join(user.room)
-    socket.in(room).emit("notification", `${user.name} just entered the room`)
-    io.in(room).emit("usersChange", getUsersInRoom(room));
-    callback();
-  })
+    socket.join(user.room);
+    socket.in(room).emit("notification", `${user.name} just entered the room`);
+    const usersInRoom = store.getUsersInRoom(room);
+    io.in(room).emit("usersChange", usersInRoom);
+    return callback();
+  });
 
   socket.on("sendMessage", (message) => {
-    const user = getUser(socket.id)
+    const user = store.getUser(socket.id);
     if (user) {
-      socket.in(user.room).emit("message", { username: user.name, message: message });
+      socket.in(user.room).emit("message", { username: user.name, message });
     }
   });
 
   socket.on("updateCode", (code) => {
-    const user = getUser(socket.id)
+    const user = store.getUser(socket.id);
     if (user) {
       socket.in(user.room).emit("codeChange", code);
     }
   });
 
   socket.on("disconnect", () => {
-    const user = deleteUser(socket.id);
+    const user = store.deleteUser(socket.id);
     if (user) {
+      const usersInRoom = store.getUsersInRoom(user.room);
       io.in(user.room).emit("notification", `${user.name} just left the room`);
-      io.in(user.room).emit("usersChange", getUsersInRoom(user.room));
+      io.in(user.room).emit("usersChange", usersInRoom);
     }
   });
 });

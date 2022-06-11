@@ -23,18 +23,21 @@ function addUser(id, name, room) {
 }
 
 function getUser(id) {
-  return USERS.find((user) => user.id == id);
+  return USERS.find((user) => user.id === id);
 }
 
 function deleteUser(id) {
   const index = USERS.findIndex((user) => user.id === id);
-  if (index !== -1) {
+  if (index > -1) {
     return USERS.splice(index, 1)[0];
   }
+  return null;
 }
 
 function getUsersInRoom(room) {
   return USERS.filter((user) => user.room === room);
 }
 
-module.exports = { addUser, getUser, deleteUser, getUsersInRoom };
+module.exports = {
+  addUser, getUser, deleteUser, getUsersInRoom,
+};

@@ -9,9 +9,9 @@ onDocumentReady(() => {
   const fontSizeInput = document.getElementById("fontSizeInput");
   const themeSelect = document.getElementById("themeSelect");
 
-  const downloadButton = document.getElementById("downloadButton");;
-  const copyButton = document.getElementById("copyButton");;
-  const joinButton = document.getElementById("joinButton");;
+  const downloadButton = document.getElementById("downloadButton");
+  const copyButton = document.getElementById("copyButton");
+  const joinButton = document.getElementById("joinButton");
   const chatButton = document.getElementById("chatButton");
 
   const toastContainer = document.getElementById("toastContainer");
@@ -39,54 +39,52 @@ onDocumentReady(() => {
     tabSize: 4,
     fontSize: 14,
     theme: "ace/theme/monokai",
-    value: `console.log("Hello World!");`
-  })
-
-  let prevCode = "";
-
-  codeEditor.on("change", debounce(() => {
-    const code = codeEditor.getValue();
-    if (code === prevCode) {
-      prevCode = code;
-      return;
-    }
-    socket.emit("updateCode", code);
-    prevCode = code;
-  }, 1500));
-
-  modeSelect.addEventListener("change", (event) => {
-    setCodeEditorOption("mode", event.target.value);
+    value: "console.log(\"Hello World!\");",
   });
 
-  tabSizeSelect.addEventListener("change", (event) => {
-    setCodeEditorOption("tabSize", event.target.value);
-  });
+  codeEditor.on("change", handleCodeEditorChange);
 
-  fontSizeInput.addEventListener("change", (event) => {
-    setCodeEditorOption("fontSize", event.target.value);
-  });
+  modeSelect.onchange = (event) => {
+    codeEditor.setOption("mode", event.target.value);
+  };
 
-  themeSelect.addEventListener("change", (event) => {
-    setCodeEditorOption("theme", event.target.value);
-  });
+  tabSizeSelect.onchange = (event) => {
+    codeEditor.setOption("tabSize", +event.target.value);
+  };
 
-  downloadButton.addEventListener("click", () => {
+  fontSizeInput.onchange = (event) => {
+    codeEditor.setOption("fontSize", +event.target.value);
+  };
+
+  themeSelect.onchange = (event) => {
+    codeEditor.setOption("theme", event.target.value);
+  };
+
+  downloadButton.onclick = () => {
     const content = codeEditor.getValue();
     const extension = getFileExtention();
     const filename = `myfile.${extension}`;
     saveFile(content, filename, "text/plain");
-  });
+  };
 
-  copyButton.addEventListener("click", () => {
-    navigator.clipboard.writeText(shareInput.value);
-    showToast("Link copied to clipboard!", toastContainer);
-    ShareModal.hide();
-  });
+  copyButton.onclick = () => {
+    navigator.clipboard
+      .writeText(shareInput.value)
+      .then(() => {
+        showToast("Link copied to clipboard!", toastContainer);
+      })
+      .catch(() => {
+        showToast("Could not copy text!", toastContainer);
+      })
+      .finally(() => {
+        ShareModal.hide();
+      });
+  };
 
-  joinButton.addEventListener("click", () => {
+  joinButton.onclick = () => {
     const payload = {
       room: shareInput.value.split("/")[4],
-      name: usernameInput.value.trim()
+      name: usernameInput.value.trim(),
     };
 
     socket.emit("join", payload, (error) => {
@@ -97,24 +95,24 @@ onDocumentReady(() => {
         JoinModal.hide();
       }
     });
-  });
+  };
 
   shareInput.value = window.location.href;
 
-  chatInput.addEventListener("keypress", (event) => {
+  chatInput.onkeydown = (event) => {
     if (event.key === "Enter") {
       chatButton.click();
     }
-  });
+  };
 
-  chatButton.addEventListener("click", () => {
+  chatButton.onclick = () => {
     const username = usernameInput.value;
     const message = chatInput.value;
     const messageHTML = createChatMessage(username, message, "right");
     chatContainer.innerHTML += messageHTML;
     chatContainer.scrollTo({ top: chatContainer.scrollHeight });
     socket.emit("sendMessage", message);
-  });
+  };
 
   chatDrawer.addEventListener("shown.bs.offcanvas", () => {
     unreadMessageCount.hidden = true;
@@ -129,9 +127,9 @@ onDocumentReady(() => {
   socket.on("message", ({ username, message }) => {
     if (chatDrawer.style.visibility !== "visible") {
       unreadMessageCount.hidden = false;
-      unreadMessageCount.textContent = Number.parseInt(unreadMessageCount.textContent) + 1;
+      unreadMessageCount.textContent = Number.parseInt(unreadMessageCount.textContent, 10) + 1;
     }
-    const messageHTML = createChatMessage(username, message, "left")
+    const messageHTML = createChatMessage(username, message, "left");
     chatContainer.innerHTML += messageHTML;
     chatContainer.scrollTo({ top: chatContainer.scrollHeight });
   });
@@ -148,14 +146,18 @@ onDocumentReady(() => {
   JoinModal.show();
 });
 
-function setCodeEditorOption(key, value) {
-  let finalValue = null;
-  if (key === "fontSize" || key === "tabSize") {
-    finalValue = parseInt(value)
-  } else {
-    finalValue = value;
-  }
-  codeEditor.setOption(key, finalValue);
+function handleCodeEditorChange() {
+  let prevCode = "";
+
+  return debounce(() => {
+    const code = codeEditor.getValue();
+    if (code === prevCode) {
+      prevCode = code;
+      return;
+    }
+    socket.emit("updateCode", code);
+    prevCode = code;
+  }, 1500);
 }
 
 function getFileExtention() {
@@ -163,14 +165,14 @@ function getFileExtention() {
   const modeValue = codeEditor.getOption("mode");
   const modeItem = modeList.modes.find((item) => item.mode === modeValue);
   if (modeItem) {
-    extention = modeItem.extensions.split("|")[0];
+    [extention] = modeItem.extensions.split("|");
   }
   return extention;
 }
 
 function saveFile(text, name, type) {
   const a = document.createElement("a");
-  const file = new Blob([text], { type: type });
+  const file = new Blob([text], { type });
   a.href = URL.createObjectURL(file);
   a.download = name;
   a.click();
@@ -198,7 +200,11 @@ function createToast(message) {
 
 function createChatMessage(username, message, type = "right") {
   const date = new Date();
-  const time = date.toLocaleString("en-US", { hour: "numeric", minute: "numeric", hour12: true });
+  const time = date.toLocaleString("en-US", {
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  });
   return `
     <div class="chat-bubble chat-bubble-${type} px-3 py-1">
       <div class="text-left"><small class="text-muted">~${username}</small></div>
@@ -210,7 +216,7 @@ function createChatMessage(username, message, type = "right") {
 
 function createPeopleList(users) {
   let html = "";
-  for (let i = 0; i < users.length; i++) {
+  for (let i = 0; i < users.length; i += 1) {
     html += `
       <li class="list-group-item list-group-item-action">
         ${users[i].name}
@@ -222,8 +228,7 @@ function createPeopleList(users) {
 
 function createHTMLElement(html) {
   const template = document.createElement("template");
-  html = html.trim();
-  template.innerHTML = html;
+  template.innerHTML = html.trim();
   return template.content.firstChild;
 }
 
@@ -232,13 +237,13 @@ function debounce(func, delay) {
   return function () {
     const context = this;
     const args = arguments;
-    clearTimeout(debounceTimer)
+    clearTimeout(debounceTimer);
     debounceTimer = setTimeout(() => func.apply(context, args), delay);
-  }
+  };
 }
 
 function onDocumentReady(fn) {
-  if (document.readyState != "loading") {
+  if (document.readyState !== "loading") {
     fn();
   } else {
     document.addEventListener("DOMContentLoaded", fn);
