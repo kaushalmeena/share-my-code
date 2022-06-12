@@ -1,19 +1,38 @@
-<div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+<div
+  class="modal fade"
+  id="shareModal"
+  tabindex="-1"
+  aria-labelledby="shareModalLabel"
+  aria-hidden="true"
+>
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="shareModalLabel">Share</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
       </div>
       <div class="modal-body">
         <p>Anyone with access to this URL will be invited to this editor.</p>
         <div class="mb-3">
           <label for="shareInput" class="form-label">Share this URL</label>
-          <input type="text" class="form-control" id="shareInput" readonly>
+          <input
+            id="shareInput"
+            type="text"
+            class="form-control"
+            data-room="{{ room }}"
+            readonly
+          />
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" id="copyButton" class="btn btn-primary">Copy</button>
+        <button id="copyButton" type="button" class="btn btn-primary">
+          Copy
+        </button>
       </div>
     </div>
   </div>

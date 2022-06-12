@@ -1,5 +1,6 @@
-const codeEditor = ace.edit("codeEditor");
 const modeList = ace.require("ace/ext/modelist");
+const languageTools = ace.require("ace/ext/language_tools");
+const codeEditor = ace.edit("codeEditor");
 
 const socket = io();
 
@@ -40,9 +41,12 @@ onDocumentReady(() => {
     fontSize: 14,
     theme: "ace/theme/monokai",
     value: "console.log(\"Hello World!\");",
+    enableBasicAutocompletion: true,
+    enableSnippets: false,
+    enableLiveAutocompletion: true
   });
 
-  codeEditor.on("change", handleCodeEditorChange);
+  codeEditor.on("change", handleCodeEditorChange());
 
   modeSelect.onchange = (event) => {
     codeEditor.setOption("mode", event.target.value);
@@ -83,7 +87,7 @@ onDocumentReady(() => {
 
   joinButton.onclick = () => {
     const payload = {
-      room: shareInput.value.split("/")[4],
+      room: shareInput.dataset.room,
       name: usernameInput.value.trim(),
     };
 
@@ -152,7 +156,6 @@ function handleCodeEditorChange() {
   return debounce(() => {
     const code = codeEditor.getValue();
     if (code === prevCode) {
-      prevCode = code;
       return;
     }
     socket.emit("updateCode", code);

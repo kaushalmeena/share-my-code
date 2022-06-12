@@ -1,9 +1,7 @@
 {% extends "layout.html" %}
-
 {% block styles %}
 <link rel="stylesheet" href="/styles/editor.css" />
 {% endblock %}
-
 {% block content %}
 <div id="toastContainer" class="toast-container"></div>
 
@@ -12,33 +10,72 @@
 </div>
 
 <div class="btn-group-toolbar btn-group-vertical">
-  <button title="Share this room" type="button" class="btn btn-secondary btn-lg" data-bs-toggle="modal"
-    data-bs-target="#shareModal">
+  <button
+    title="Share this room"
+    type="button"
+    class="btn btn-secondary btn-lg"
+    data-bs-toggle="modal"
+    data-bs-target="#shareModal"
+  >
     <i class="bi bi-send-plus-fill fs-4"></i>
   </button>
-  <button title="Show settings" type="button" class="btn btn-secondary btn-lg" data-bs-toggle="offcanvas"
-    data-bs-target="#settingsDrawer" aria-controls="settingsDrawer">
+  <button
+    title="Show settings"
+    type="button"
+    class="btn btn-secondary btn-lg"
+    data-bs-toggle="offcanvas"
+    data-bs-target="#settingsDrawer"
+    aria-controls="settingsDrawer"
+  >
     <i class="bi bi-gear-fill fs-4"></i>
   </button>
-  <button title="Show everyone" type="button" class="btn btn-secondary btn-lg position-relative"
-    data-bs-toggle="offcanvas" data-bs-target="#peopleDrawer" aria-controls="peopleDrawer">
+  <button
+    title="Show everyone"
+    type="button"
+    class="btn btn-secondary btn-lg position-relative"
+    data-bs-toggle="offcanvas"
+    data-bs-target="#peopleDrawer"
+    aria-controls="peopleDrawer"
+  >
     <i class="bi bi-people-fill fs-4"></i>
-    <span id="activePeopleCount" class="badge rounded-pill bg-primary position-absolute top-0 start-0 translate-middle">
+    <span
+      id="activePeopleCount"
+      class="badge rounded-pill bg-primary position-absolute top-0 start-0 translate-middle"
+    >
       0
     </span>
   </button>
-  <button title="Chat with everyone" type="button" class="btn btn-secondary btn-lg" data-bs-toggle="offcanvas"
-    data-bs-target="#chatDrawer" aria-controls="chatDrawer">
+  <button
+    title="Chat with everyone"
+    type="button"
+    class="btn btn-secondary btn-lg"
+    data-bs-toggle="offcanvas"
+    data-bs-target="#chatDrawer"
+    aria-controls="chatDrawer"
+  >
     <i class="bi bi-chat-dots-fill fs-4"></i>
-    <span id="unreadMessageCount" class="badge rounded-pill bg-danger position-absolute top-0 start-0 translate-middle"
-      hidden>
+    <span
+      id="unreadMessageCount"
+      class="badge rounded-pill bg-danger position-absolute top-0 start-0 translate-middle"
+      hidden
+    >
       0
     </span>
   </button>
-  <button title="Download this code" type="button" id="downloadButton" class="btn btn-secondary btn-lg">
+  <button
+    id="downloadButton"
+    title="Download this code"
+    type="button"
+    class="btn btn-secondary btn-lg"
+  >
     <i class="bi bi-file-earmark-arrow-down-fill fs-4"></i>
   </button>
-  <a title="Open new editor" class="btn btn-secondary btn-lg" href="/new-editor/" role="button">
+  <a
+    title="Open new editor"
+    class="btn btn-secondary btn-lg"
+    href="/new-editor/"
+    role="button"
+  >
     <i class="bi bi-file-earmark-plus-fill fs-4"></i>
   </a>
 </div>
@@ -57,6 +94,7 @@
 {% block scripts %}
 <script src="/library/ace/ace.js"></script>
 <script src="/library/ace/ext-modelist.js"></script>
+<script src="/library/ace/ext-language_tools.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/scripts/editor.js"></script>
 {% endblock %}

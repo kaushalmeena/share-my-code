@@ -1,39 +1,59 @@
-<div id="settingsDrawer" class="offcanvas offcanvas-end" tabindex="-1" aria-labelledby="settingsDrawerLabel">
+<div
+  id="settingsDrawer"
+  class="offcanvas offcanvas-end"
+  tabindex="-1"
+  aria-labelledby="settingsDrawerLabel"
+>
   <div class="offcanvas-header">
     <h5 class="offcanvas-title">Settings</h5>
-    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    <button
+      type="button"
+      class="btn-close text-reset"
+      data-bs-dismiss="offcanvas"
+      aria-label="Close"
+    ></button>
   </div>
   <div class="offcanvas-body">
     <div class="mb-3">
       <label for="modeSelect" class="form-label">Language</label>
-      <select class="form-control" id="modeSelect">
+      <select id="modeSelect" class="form-control">
+        <option value="ace/mode/assembly_x86">Assembly x86</option>
         <option value="ace/mode/batchfile">BatchFile</option>
         <option value="ace/mode/c_cpp">C and C++</option>
         <option value="ace/mode/csharp">C#</option>
         <option value="ace/mode/css">CSS</option>
         <option value="ace/mode/dart">Dart</option>
+        <option value="ace/mode/dockerfile">Dockerfile</option>
         <option value="ace/mode/golang">Go</option>
         <option value="ace/mode/html">HTML</option>
         <option value="ace/mode/java">Java</option>
         <option value="ace/mode/javascript" selected>JavaScript</option>
+        <option value="ace/mode/json">JSON</option>
         <option value="ace/mode/jsx">JSX</option>
         <option value="ace/mode/kotlin">Kotlin</option>
-        <option value="ace/mode/perl">Perl</option>
+        <option value="ace/mode/markdown">Markdown</option>
+        <option value="ace/mode/matlab">MATLAB</option>
         <option value="ace/mode/php">PHP</option>
         <option value="ace/mode/plain_text">Plaintext</option>
         <option value="ace/mode/python">Python</option>
+        <option value="ace/mode/r">R</option>
         <option value="ace/mode/ruby">Ruby</option>
         <option value="ace/mode/rust">Rust</option>
+        <option value="ace/mode/sass">SASS</option>
         <option value="ace/mode/scala">Scala</option>
+        <option value="ace/mode/scss">SCSS</option>
         <option value="ace/mode/sh">SH</option>
         <option value="ace/mode/sql">SQL</option>
         <option value="ace/mode/swift">Swift</option>
+        <option value="ace/mode/tsx">TSX</option>
+        <option value="ace/mode/typescript">Typescript</option>
         <option value="ace/mode/xml">XML</option>
+        <option value="ace/mode/yaml">YAML</option>
       </select>
     </div>
     <div class="mb-3">
       <label for="tabSizeSelect" class="form-label">Tab Size</label>
-      <select class="form-select" id="tabSizeSelect">
+      <select id="tabSizeSelect" class="form-select">
         <option value="2">2</option>
         <option value="4" selected>4</option>
         <option value="6">6</option>
@@ -42,11 +62,11 @@
     </div>
     <div class="mb-3">
       <label for="fontSizeInput" class="form-label">Font Size</label>
-      <input type="number" class="form-control" id="fontSizeInput" value="14">
+      <input id="fontSizeInput" type="number" class="form-control" value="14" />
     </div>
     <div class="mb-3">
       <label for="themeSelect" class="form-label">Theme</label>
-      <select class="form-control" id="themeSelect">
+      <select id="themeSelect" class="form-control">
         <option value="ace/theme/ambiance">Ambiance</option>
         <option value="ace/theme/cobalt">Cobalt</option>
         <option value="ace/theme/dracula">Dracula</option>

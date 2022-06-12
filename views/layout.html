@@ -1,48 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ShareMyCode : {{ title }}</title>
+    <meta
+      name="description"
+      content="A web app that facilitates realtime sharing of code editor using socket.io library."
+    />
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ShareMyCode : {{ title }}</title>
-  <meta name="description"
-    content="A web app that facilitates realtime sharing of code editor using socket.io library." />
+    <!-- FAVICON -->
+    <link rel="shortcut icon" href="/favicon.png" />
 
-  <!-- FAVICON -->
-  <link rel="shortcut icon" href="/favicon.png">
+    <!-- STYLESHEETS -->
+    <link rel="stylesheet" href="/library/bootstrap/bootstrap.min.css" />
+    <link
+      rel="stylesheet"
+      href="/library/bootstrap-icons/bootstrap-icons.min.css"
+    />
+    {% block styles %}
+    {% endblock %}
+  </head>
 
-  <!-- STYLESHEETS -->
-  <link rel="stylesheet" href="/library/bootstrap/bootstrap.min.css" />
-  <link rel="stylesheet" href="/library/bootstrap-icons/bootstrap-icons.min.css" />
-  {% block styles %}
-  {% endblock %}
-</head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/">
+          <i class="bi bi-code-square"></i> ShareMyCode
+        </a>
+        <ul class="navbar-nav ms-md-auto">
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              href="https://github.com/kaushalmeena/myapp-sharemycode"
+            >
+              <i class="bi bi-github"></i> Github
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
 
-<body>
+    {% block content %}
+    {% endblock %}
 
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="/">
-        <i class="bi bi-code-square"></i> ShareMyCode
-      </a>
-      <ul class="navbar-nav ms-md-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="https://github.com/kaushalmeena/myapp-sharemycode">
-            <i class="bi bi-github"></i> Github
-          </a>
-        </li>
-      </ul>
-    </div>
-  </nav>
-
-  {% block content %}
-  {% endblock %}
-
-  <!-- SCRIPTS -->
-  <script src="/library/popper/popper.min.js"></script>
-  <script src="/library/bootstrap/bootstrap.min.js"></script>
-  {% block scripts %}
-  {% endblock %}
-</body>
-
+    <!-- SCRIPTS -->
+    <script src="/library/popper/popper.min.js"></script>
+    <script src="/library/bootstrap/bootstrap.min.js"></script>
+    {% block scripts %}
+    {% endblock %}
+  </body>
 </html>

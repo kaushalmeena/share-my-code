@@ -29,6 +29,7 @@
 .chat-container {
   overflow: auto;
   height: calc(100vh - 140px);
+  scroll-behavior: smooth;
 }
 
 .chat-bubble {

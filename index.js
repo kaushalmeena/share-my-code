@@ -8,7 +8,7 @@ const app = express();
 const server = http.createServer(app);
 const io = require("socket.io")(server);
 
-const store = require("./store/users");
+const userStore = require("./store/user");
 
 const DEVELOPMENT_MODE = app.get("env") === "development";
 
@@ -44,6 +44,7 @@ app.get("/", (req, res) => {
 app.get("/editor/:room/", (req, res) => {
   res.render("editor", {
     title: "Editor",
+    room: req.params.room,
   });
 });
 
@@ -53,35 +54,35 @@ server.listen(PORT, () => {
 
 io.on("connection", (socket) => {
   socket.on("join", ({ name, room }, callback) => {
-    const { user, error } = store.addUser(socket.id, name, room);
+    const { user, error } = userStore.addUser(socket.id, name, room);
     if (error) {
       return callback(error);
     }
+    const usersInRoom = userStore.getUsersInRoom(room);
     socket.join(user.room);
     socket.in(room).emit("notification", `${user.name} just entered the room`);
-    const usersInRoom = store.getUsersInRoom(room);
     io.in(room).emit("usersChange", usersInRoom);
     return callback();
   });
 
   socket.on("sendMessage", (message) => {
-    const user = store.getUser(socket.id);
+    const user = userStore.getUser(socket.id);
     if (user) {
       socket.in(user.room).emit("message", { username: user.name, message });
     }
   });
 
   socket.on("updateCode", (code) => {
-    const user = store.getUser(socket.id);
+    const user = userStore.getUser(socket.id);
     if (user) {
       socket.in(user.room).emit("codeChange", code);
     }
   });
 
   socket.on("disconnect", () => {
-    const user = store.deleteUser(socket.id);
+    const user = userStore.deleteUser(socket.id);
     if (user) {
-      const usersInRoom = store.getUsersInRoom(user.room);
+      const usersInRoom = userStore.getUsersInRoom(user.room);
       io.in(user.room).emit("notification", `${user.name} just left the room`);
       io.in(user.room).emit("usersChange", usersInRoom);
     }
