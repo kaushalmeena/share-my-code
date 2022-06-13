@@ -40,10 +40,10 @@ onDocumentReady(() => {
     tabSize: 4,
     fontSize: 14,
     theme: "ace/theme/monokai",
-    value: "console.log(\"Hello World!\");",
+    value: 'console.log("Hello World!");',
     enableBasicAutocompletion: true,
     enableSnippets: false,
-    enableLiveAutocompletion: true
+    enableLiveAutocompletion: true,
   });
 
   codeEditor.on("change", handleCodeEditorChange());
@@ -187,10 +187,13 @@ function showToast(message, container) {
   const Toast = bootstrap.Toast.getOrCreateInstance(toastEl, { delay: 2000 });
   container.append(toastEl);
   Toast.show();
-  setTimeout(() => {
-    Toast.dispose();
-    toastEl.remove();
-  }, 3000);
+  toastEl.addEventListener(
+    "hidden.bs.toast",
+    () => {
+      toastEl.remove();
+    },
+    { once: true }
+  );
 }
 
 function createToast(message) {
