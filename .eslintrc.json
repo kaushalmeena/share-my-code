@@ -1,0 +1,18 @@
+{
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es2021": true,
+    "node": true
+  },
+  "globals": {
+    "ace": "readonly",
+    "io": "readonly",
+    "bootstrap": "readonly"
+  },
+  "extends": [
+    "airbnb-base", 
+    "plugin:prettier/recommended"
+  ],
+  "rules": {}
+}

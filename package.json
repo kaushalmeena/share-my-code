@@ -6,8 +6,10 @@
   "author": "Kaushal Meena <kaushal.meena1996@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "cross-env NODE_ENV=production node index",
-    "dev": "cross-env NODE_ENV=development nodemon index"
+    "start": "cross-env NODE_ENV=production node index.mjs",
+    "dev": "cross-env NODE_ENV=development nodemon index.mjs",
+    "lint:check": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "compression": "^1.7.4",
@@ -17,6 +19,12 @@
     "socket.io": "^4.5.1"
   },
   "devDependencies": {
-    "nodemon": "^2.0.15"
+    "eslint": "^8.17.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "nodemon": "^2.0.15",
+    "prettier": "^2.6.2"
   }
 }

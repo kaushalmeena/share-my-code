@@ -1,7 +1,7 @@
-const USERS = [];
+const USER_STORE = [];
 
 function addUser(id, name, room) {
-  const existingUser = USERS.find((user) => user.name === name);
+  const existingUser = USER_STORE.find((user) => user.name === name);
 
   if (existingUser) {
     return { error: "Username has already been taken" };
@@ -17,27 +17,30 @@ function addUser(id, name, room) {
   }
 
   const user = { id, name, room };
-  USERS.push(user);
+  USER_STORE.push(user);
 
   return { user };
 }
 
 function getUser(id) {
-  return USERS.find((user) => user.id === id);
+  return USER_STORE.find((user) => user.id === id);
 }
 
 function deleteUser(id) {
-  const index = USERS.findIndex((user) => user.id === id);
-  if (index > -1) {
-    return USERS.splice(index, 1)[0];
+  const foundIndex = USER_STORE.findIndex((user) => user.id === id);
+  if (foundIndex > -1) {
+    return USER_STORE.splice(foundIndex, 1)[0];
   }
   return null;
 }
 
 function getUsersInRoom(room) {
-  return USERS.filter((user) => user.room === room);
+  return USER_STORE.filter((user) => user.room === room);
 }
 
 module.exports = {
-  addUser, getUser, deleteUser, getUsersInRoom,
+  addUser,
+  getUser,
+  deleteUser,
+  getUsersInRoom
 };

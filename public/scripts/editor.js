@@ -1,8 +1,113 @@
-const modeList = ace.require("ace/ext/modelist");
-const languageTools = ace.require("ace/ext/language_tools");
 const codeEditor = ace.edit("codeEditor");
+const modeList = ace.require("ace/ext/modelist");
+// eslint-disable-next-line no-unused-vars
+const languageTools = ace.require("ace/ext/language_tools");
 
 const socket = io();
+
+function debounce(func, delay) {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => func.apply(this, args), delay);
+  };
+}
+
+function handleCodeEditorChange() {
+  let prevCode = "";
+
+  return debounce(() => {
+    const code = codeEditor.getValue();
+    if (code === prevCode) {
+      return;
+    }
+    socket.emit("updateCode", code);
+    prevCode = code;
+  }, 1500);
+}
+
+function getFileExtention() {
+  let extention = "txt";
+  const modeValue = codeEditor.getOption("mode");
+  const modeItem = modeList.modes.find((item) => item.mode === modeValue);
+  if (modeItem) {
+    [extention] = modeItem.extensions.split("|");
+  }
+  return extention;
+}
+
+function saveFile(text, name, type) {
+  const a = document.createElement("a");
+  const file = new Blob([text], { type });
+  a.href = URL.createObjectURL(file);
+  a.download = name;
+  a.click();
+}
+
+function createToast(message) {
+  return `
+    <div role="alert" aria-live="assertive" aria-atomic="true" class="toast">
+      <div class="toast-body">${message}</div>
+    </div>
+  `;
+}
+
+function createHTMLElement(html) {
+  const template = document.createElement("template");
+  template.innerHTML = html.trim();
+  return template.content.firstChild;
+}
+
+function showToast(message, container) {
+  const toastHTML = createToast(message);
+  const toastEl = createHTMLElement(toastHTML);
+  const Toast = bootstrap.Toast.getOrCreateInstance(toastEl, { delay: 2000 });
+  container.append(toastEl);
+  Toast.show();
+  toastEl.addEventListener(
+    "hidden.bs.toast",
+    () => {
+      toastEl.remove();
+    },
+    { once: true }
+  );
+}
+
+function createChatMessage(username, message, type = "right") {
+  const date = new Date();
+  const time = date.toLocaleString("en-US", {
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true
+  });
+  return `
+    <div class="chat-bubble chat-bubble-${type} px-3 py-1">
+      <div class="text-left"><small class="text-muted">~${username}</small></div>
+      <div class="text-left">${message}</div>
+      <div class="text-left"><small class="text-muted">${time}</small></div>
+    </div>
+  `;
+}
+
+function createPeopleList(users) {
+  let html = "";
+  for (let i = 0; i < users.length; i += 1) {
+    html += `
+      <li class="list-group-item list-group-item-action">
+        ${users[i].name}
+      </li>
+    `;
+  }
+  return html;
+}
+
+function onDocumentReady(fn) {
+  if (document.readyState !== "loading") {
+    fn();
+  } else {
+    document.addEventListener("DOMContentLoaded", fn);
+  }
+}
 
 onDocumentReady(() => {
   const modeSelect = document.getElementById("modeSelect");
@@ -43,7 +148,7 @@ onDocumentReady(() => {
     value: 'console.log("Hello World!");',
     enableBasicAutocompletion: true,
     enableSnippets: false,
-    enableLiveAutocompletion: true,
+    enableLiveAutocompletion: true
   });
 
   codeEditor.on("change", handleCodeEditorChange());
@@ -88,7 +193,7 @@ onDocumentReady(() => {
   joinButton.onclick = () => {
     const payload = {
       room: shareInput.dataset.room,
-      name: usernameInput.value.trim(),
+      name: usernameInput.value.trim()
     };
 
     socket.emit("join", payload, (error) => {
@@ -131,7 +236,8 @@ onDocumentReady(() => {
   socket.on("message", ({ username, message }) => {
     if (chatDrawer.style.visibility !== "visible") {
       unreadMessageCount.hidden = false;
-      unreadMessageCount.textContent = Number.parseInt(unreadMessageCount.textContent, 10) + 1;
+      unreadMessageCount.textContent =
+        Number.parseInt(unreadMessageCount.textContent, 10) + 1;
     }
     const messageHTML = createChatMessage(username, message, "left");
     chatContainer.innerHTML += messageHTML;
@@ -149,109 +255,3 @@ onDocumentReady(() => {
 
   JoinModal.show();
 });
-
-function handleCodeEditorChange() {
-  let prevCode = "";
-
-  return debounce(() => {
-    const code = codeEditor.getValue();
-    if (code === prevCode) {
-      return;
-    }
-    socket.emit("updateCode", code);
-    prevCode = code;
-  }, 1500);
-}
-
-function getFileExtention() {
-  let extention = "txt";
-  const modeValue = codeEditor.getOption("mode");
-  const modeItem = modeList.modes.find((item) => item.mode === modeValue);
-  if (modeItem) {
-    [extention] = modeItem.extensions.split("|");
-  }
-  return extention;
-}
-
-function saveFile(text, name, type) {
-  const a = document.createElement("a");
-  const file = new Blob([text], { type });
-  a.href = URL.createObjectURL(file);
-  a.download = name;
-  a.click();
-}
-
-function showToast(message, container) {
-  const toastHTML = createToast(message);
-  const toastEl = createHTMLElement(toastHTML);
-  const Toast = bootstrap.Toast.getOrCreateInstance(toastEl, { delay: 2000 });
-  container.append(toastEl);
-  Toast.show();
-  toastEl.addEventListener(
-    "hidden.bs.toast",
-    () => {
-      toastEl.remove();
-    },
-    { once: true }
-  );
-}
-
-function createToast(message) {
-  return `
-    <div role="alert" aria-live="assertive" aria-atomic="true" class="toast">
-      <div class="toast-body">${message}</div>
-    </div>
-  `;
-}
-
-function createChatMessage(username, message, type = "right") {
-  const date = new Date();
-  const time = date.toLocaleString("en-US", {
-    hour: "numeric",
-    minute: "numeric",
-    hour12: true,
-  });
-  return `
-    <div class="chat-bubble chat-bubble-${type} px-3 py-1">
-      <div class="text-left"><small class="text-muted">~${username}</small></div>
-      <div class="text-left">${message}</div>
-      <div class="text-left"><small class="text-muted">${time}</small></div>
-    </div>
-  `;
-}
-
-function createPeopleList(users) {
-  let html = "";
-  for (let i = 0; i < users.length; i += 1) {
-    html += `
-      <li class="list-group-item list-group-item-action">
-        ${users[i].name}
-      </li>
-    `;
-  }
-  return html;
-}
-
-function createHTMLElement(html) {
-  const template = document.createElement("template");
-  template.innerHTML = html.trim();
-  return template.content.firstChild;
-}
-
-function debounce(func, delay) {
-  let debounceTimer;
-  return function () {
-    const context = this;
-    const args = arguments;
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => func.apply(context, args), delay);
-  };
-}
-
-function onDocumentReady(fn) {
-  if (document.readyState !== "loading") {
-    fn();
-  } else {
-    document.addEventListener("DOMContentLoaded", fn);
-  }
-}

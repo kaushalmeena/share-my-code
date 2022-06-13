@@ -3,10 +3,11 @@ const compression = require("compression");
 const nunjucks = require("nunjucks");
 const path = require("path");
 const http = require("http");
+const { Server } = require("socket.io");
 
 const app = express();
 const server = http.createServer(app);
-const io = require("socket.io")(server);
+const io = new Server(server);
 
 const userStore = require("./store/user");
 
@@ -21,7 +22,7 @@ nunjucks.configure("views", {
   autoescape: true,
   express: app,
   watch: DEVELOPMENT_MODE,
-  noCache: DEVELOPMENT_MODE,
+  noCache: DEVELOPMENT_MODE
 });
 
 app.use(compression());
@@ -37,18 +38,19 @@ app.get("/new-editor/", (req, res) => {
 
 app.get("/", (req, res) => {
   res.render("home", {
-    title: "Home",
+    title: "Home"
   });
 });
 
 app.get("/editor/:room/", (req, res) => {
   res.render("editor", {
     title: "Editor",
-    room: req.params.room,
+    room: req.params.room
   });
 });
 
 server.listen(PORT, () => {
+  // eslint-disable-next-line no-console
   console.log("Express server listening on port http://localhost:%d", PORT);
 });
 
