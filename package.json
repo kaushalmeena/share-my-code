@@ -6,8 +6,8 @@
   "author": "Kaushal Meena <kaushal.meena1996@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "cross-env NODE_ENV=production node index.mjs",
-    "dev": "cross-env NODE_ENV=development nodemon index.mjs",
+    "start": "cross-env NODE_ENV=production node index.js",
+    "dev": "cross-env NODE_ENV=development nodemon index.js",
     "lint:check": "eslint .",
     "lint:fix": "eslint . --fix"
   },
