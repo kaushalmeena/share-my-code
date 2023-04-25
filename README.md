@@ -44,18 +44,13 @@ Your app should now be running on [localhost:3000](http://localhost:3000/).
 
 ## Deployment
 
-To push to Heroku you need to install the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) afterwards, you can run these commands after setting up the project locally:
+To push to Vercel you need to run these commands after setting up the project locally:
 
 ```bash
-$ heroku login
-$ heroku create
-$ git push heroku master
-$ heroku open
+$ npx vercel login
+$ npx vercel
 ```
 
-or
-
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
 ## License
 
