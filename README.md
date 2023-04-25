@@ -2,7 +2,7 @@
 
 A web app that facilitates realtime sharing of code editor using socket.io library.
 
-Live version is deployed at [https://myapp-sharemycode.vercel.app/](https://myapp-sharemycode.vercel.app/)
+Live version is deployed at [https://sharemycode.onrender.com/](https://sharemycode.onrender.com/)
 
 ## Getting Started
 
@@ -41,16 +41,6 @@ $ npm run dev
 ```
 
 Your app should now be running on [localhost:3000](http://localhost:3000/).
-
-## Deployment
-
-To push to Vercel you need to run these commands after setting up the project locally:
-
-```bash
-$ npx vercel login
-$ npx vercel
-```
-
 
 ## License
 
