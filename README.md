@@ -2,7 +2,7 @@
 
 A web app that facilitates realtime sharing of code editor using socket.io library.
 
-Live version is deployed at [https://myapp-sharemycode.herokuapp.com/](https://myapp-sharemycode.herokuapp.com/)
+Live version is deployed at [https://myapp-sharemycode.vercel.app/](https://myapp-sharemycode.vercel.app/)
 
 ## Getting Started
 
