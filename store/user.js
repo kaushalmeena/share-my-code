@@ -1,6 +1,6 @@
 const USER_STORE = [];
 
-function addUser(id, name, room) {
+function createUser(id, name, room) {
   const existingUser = USER_STORE.find((user) => user.name === name);
 
   if (existingUser) {
@@ -22,7 +22,7 @@ function addUser(id, name, room) {
   return { user };
 }
 
-function getUser(id) {
+function fetchUser(id) {
   return USER_STORE.find((user) => user.id === id);
 }
 
@@ -34,13 +34,15 @@ function deleteUser(id) {
   return null;
 }
 
-function getUsersInRoom(room) {
+function fetchUsersInRoom(room) {
   return USER_STORE.filter((user) => user.room === room);
 }
 
-module.exports = {
-  addUser,
-  getUser,
+const store = {
+  createUser,
+  fetchUser,
   deleteUser,
-  getUsersInRoom
+  fetchUsersInRoom
 };
+
+export default store;

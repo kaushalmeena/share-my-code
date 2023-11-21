@@ -3,13 +3,17 @@
   "version": "1.0.0",
   "description": "A web app that facilitates realtime sharing of code editor using socket.io library.",
   "repository": "git@github.com:kaushalmeena/myapp-sharemycode.git",
-  "author": "Kaushal Meena <kaushal.meena1996@gmail.com>",
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "start": "cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "lint:check": "eslint .",
     "lint:fix": "eslint . --fix"
+  },
+  "author": {
+    "name": "kaushalmeena",
+    "email": "kaushal.meena1996@gmail.com"
   },
   "dependencies": {
     "compression": "^1.7.4",

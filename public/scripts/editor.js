@@ -110,35 +110,35 @@ function onDocumentReady(fn) {
 }
 
 onDocumentReady(() => {
-  const modeSelect = document.getElementById("modeSelect");
-  const tabSizeSelect = document.getElementById("tabSizeSelect");
-  const fontSizeInput = document.getElementById("fontSizeInput");
-  const themeSelect = document.getElementById("themeSelect");
+  const modeSelectEl = document.getElementById("modeSelect");
+  const tabSizeSelectEl = document.getElementById("tabSizeSelect");
+  const fontSizeInputEl = document.getElementById("fontSizeInput");
+  const themeSelectEl = document.getElementById("themeSelect");
 
-  const downloadButton = document.getElementById("downloadButton");
-  const copyButton = document.getElementById("copyButton");
-  const joinButton = document.getElementById("joinButton");
-  const chatButton = document.getElementById("chatButton");
+  const downloadButtonEl = document.getElementById("downloadButton");
+  const copyButtonEl = document.getElementById("copyButton");
+  const joinButtonEl = document.getElementById("joinButton");
+  const chatButtonEl = document.getElementById("chatButton");
 
-  const toastContainer = document.getElementById("toastContainer");
-  const chatContainer = document.getElementById("chatContainer");
+  const toastContainerEl = document.getElementById("toastContainer");
+  const chatContainerEl = document.getElementById("chatContainer");
 
-  const shareInput = document.getElementById("shareInput");
-  const chatInput = document.getElementById("chatInput");
-  const usernameInput = document.getElementById("usernameInput");
-  const usernameError = document.getElementById("usernameError");
+  const shareInputEl = document.getElementById("shareInput");
+  const chatInputEl = document.getElementById("chatInput");
+  const usernameInputEl = document.getElementById("usernameInput");
+  const usernameErrorEl = document.getElementById("usernameError");
 
-  const unreadMessageCount = document.getElementById("unreadMessageCount");
-  const activePeopleCount = document.getElementById("activePeopleCount");
-  const activePeopleList = document.getElementById("activePeopleList");
+  const unreadMessageCountEl = document.getElementById("unreadMessageCount");
+  const activePeopleCountEl = document.getElementById("activePeopleCount");
+  const activePeopleListEl = document.getElementById("activePeopleList");
 
-  const chatDrawer = document.getElementById("chatDrawer");
+  const chatDrawerEl = document.getElementById("chatDrawer");
 
-  const joinModal = document.getElementById("joinModal");
-  const shareModal = document.getElementById("shareModal");
+  const joinModalEl = document.getElementById("joinModal");
+  const shareModalEl = document.getElementById("shareModal");
 
-  const JoinModal = bootstrap.Modal.getOrCreateInstance(joinModal);
-  const ShareModal = bootstrap.Modal.getOrCreateInstance(shareModal);
+  const JoinModal = bootstrap.Modal.getOrCreateInstance(joinModalEl);
+  const ShareModal = bootstrap.Modal.getOrCreateInstance(shareModalEl);
 
   codeEditor.setOptions({
     mode: "ace/mode/javascript",
@@ -153,95 +153,95 @@ onDocumentReady(() => {
 
   codeEditor.on("change", handleCodeEditorChange());
 
-  modeSelect.onchange = (event) => {
+  modeSelectEl.onchange = (event) => {
     codeEditor.setOption("mode", event.target.value);
   };
 
-  tabSizeSelect.onchange = (event) => {
+  tabSizeSelectEl.onchange = (event) => {
     codeEditor.setOption("tabSize", +event.target.value);
   };
 
-  fontSizeInput.onchange = (event) => {
+  fontSizeInputEl.onchange = (event) => {
     codeEditor.setOption("fontSize", +event.target.value);
   };
 
-  themeSelect.onchange = (event) => {
+  themeSelectEl.onchange = (event) => {
     codeEditor.setOption("theme", event.target.value);
   };
 
-  downloadButton.onclick = () => {
+  downloadButtonEl.onclick = () => {
     const content = codeEditor.getValue();
     const extension = getFileExtension();
     const filename = `myfile.${extension}`;
     saveFile(content, filename, "text/plain");
   };
 
-  copyButton.onclick = () => {
+  copyButtonEl.onclick = () => {
     navigator.clipboard
-      .writeText(shareInput.value)
+      .writeText(shareInputEl.value)
       .then(() => {
-        showToast("Link copied to clipboard!", toastContainer);
+        showToast("Link copied to clipboard!", toastContainerEl);
       })
       .catch(() => {
-        showToast("Could not copy text!", toastContainer);
+        showToast("Could not copy text!", toastContainerEl);
       })
       .finally(() => {
         ShareModal.hide();
       });
   };
 
-  joinButton.onclick = () => {
+  joinButtonEl.onclick = () => {
     const payload = {
-      room: shareInput.dataset.room,
-      name: usernameInput.value.trim()
+      room: shareInputEl.dataset.room,
+      name: usernameInputEl.value.trim()
     };
 
     socket.emit("join", payload, (error) => {
       if (error) {
-        usernameInput.classList.add("is-invalid");
-        usernameError.innerHTML = error;
+        usernameInputEl.classList.add("is-invalid");
+        usernameErrorEl.innerHTML = error;
       } else {
         JoinModal.hide();
       }
     });
   };
 
-  shareInput.value = window.location.href;
+  shareInputEl.value = window.location.href;
 
-  chatInput.onkeydown = (event) => {
+  chatInputEl.onkeydown = (event) => {
     if (event.key === "Enter") {
-      chatButton.click();
+      chatButtonEl.click();
     }
   };
 
-  chatButton.onclick = () => {
-    const username = usernameInput.value;
-    const message = chatInput.value;
+  chatButtonEl.onclick = () => {
+    const username = usernameInputEl.value;
+    const message = chatInputEl.value;
     const messageHTML = createChatMessage(username, message, "right");
-    chatContainer.innerHTML += messageHTML;
-    chatContainer.scrollTo({ top: chatContainer.scrollHeight });
+    chatContainerEl.innerHTML += messageHTML;
+    chatContainerEl.scrollTo({ top: chatContainerEl.scrollHeight });
     socket.emit("sendMessage", message);
   };
 
-  chatDrawer.addEventListener("shown.bs.offcanvas", () => {
-    unreadMessageCount.hidden = true;
-    unreadMessageCount.textContent = "0";
+  chatDrawerEl.addEventListener("shown.bs.offcanvas", () => {
+    unreadMessageCountEl.hidden = true;
+    unreadMessageCountEl.textContent = "0";
   });
 
   socket.on("usersChange", (users) => {
-    activePeopleCount.innerHTML = users.length;
-    activePeopleList.innerHTML = createPeopleList(users);
+    activePeopleCountEl.innerHTML = users.length;
+    activePeopleListEl.innerHTML = createPeopleList(users);
   });
 
   socket.on("message", ({ username, message }) => {
-    if (chatDrawer.style.visibility !== "visible") {
-      unreadMessageCount.hidden = false;
-      unreadMessageCount.textContent =
-        Number.parseInt(unreadMessageCount.textContent, 10) + 1;
+    if (chatDrawerEl.style.visibility !== "visible") {
+      unreadMessageCountEl.hidden = false;
+      unreadMessageCountEl.textContent =
+        Number.parseInt(unreadMessageCountEl.textContent, 10) + 1;
     }
     const messageHTML = createChatMessage(username, message, "left");
-    chatContainer.innerHTML += messageHTML;
-    chatContainer.scrollTo({ top: chatContainer.scrollHeight });
+    chatContainerEl.innerHTML += messageHTML;
+    chatContainerEl.scrollTo({ top: chatContainerEl.scrollHeight });
   });
 
   socket.on("codeChange", (code) => {
@@ -250,7 +250,7 @@ onDocumentReady(() => {
   });
 
   socket.on("notification", (message) => {
-    showToast(message, toastContainer);
+    showToast(message, toastContainerEl);
   });
 
   JoinModal.show();
