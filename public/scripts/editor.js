@@ -26,14 +26,14 @@ function handleCodeEditorChange() {
   }, 1500);
 }
 
-function getFileExtention() {
-  let extention = "txt";
+function getFileExtension() {
+  let extension = "txt";
   const modeValue = codeEditor.getOption("mode");
   const modeItem = modeList.modes.find((item) => item.mode === modeValue);
   if (modeItem) {
-    [extention] = modeItem.extensions.split("|");
+    [extension] = modeItem.extensions.split("|");
   }
-  return extention;
+  return extension;
 }
 
 function saveFile(text, name, type) {
@@ -171,7 +171,7 @@ onDocumentReady(() => {
 
   downloadButton.onclick = () => {
     const content = codeEditor.getValue();
-    const extension = getFileExtention();
+    const extension = getFileExtension();
     const filename = `myfile.${extension}`;
     saveFile(content, filename, "text/plain");
   };
