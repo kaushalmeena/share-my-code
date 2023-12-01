@@ -71,17 +71,29 @@ io.on("connection", (socket) => {
     return callback();
   });
 
-  socket.on("sendMessage", (message) => {
+  socket.on("chatMessage", (message) => {
     const user = userStore.fetchUser(socket.id);
     if (user) {
-      socket.in(user.room).emit("message", { username: user.name, message });
+      socket
+        .in(user.room)
+        .emit("chatMessage", { username: user.name, message });
     }
   });
 
-  socket.on("updateCode", (code) => {
+  socket.on("codeChange", (code) => {
     const user = userStore.fetchUser(socket.id);
     if (user) {
       socket.in(user.room).emit("codeChange", code);
+    }
+  });
+
+  socket.on("langChange", ({ name, lang }) => {
+    const user = userStore.fetchUser(socket.id);
+    if (user) {
+      socket
+        .in(user.room)
+        .emit("notification", `User ${user.name} changed language to ${name}`);
+      socket.in(user.room).emit("langChange", { name, lang });
     }
   });
 

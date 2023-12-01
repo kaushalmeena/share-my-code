@@ -14,7 +14,7 @@ function handleEditorChange() {
     timeoutId = setTimeout(() => {
       const code = codeEditor.getValue();
       if (code !== prevCode) {
-        socket.emit("updateCode", code);
+        socket.emit("codeChange", code);
         prevCode = code;
       }
     }, 1500);
@@ -58,10 +58,10 @@ function getHTMLElement(html) {
 function showToast(message, container) {
   const toastHTML = getToastHTML(message);
   const toastEl = getHTMLElement(toastHTML);
-  const Toast = new bootstrap.Toast(toastEl, { delay: 2000 });
+  const Toast = bootstrap.Toast.getOrCreateInstance(toastEl, { delay: 2000 });
   container.append(toastEl);
   Toast.show();
-  Toast.addEventListener(
+  toastEl.addEventListener(
     "hidden.bs.toast",
     () => {
       toastEl.remove();
@@ -154,6 +154,10 @@ onDocumentReady(() => {
 
   modeSelectEl.onchange = (event) => {
     codeEditor.setOption("mode", event.target.value);
+    socket.emit("langChange", {
+      lang: modeSelectEl.value,
+      name: modeSelectEl.options[modeSelectEl.selectedIndex].text
+    });
   };
 
   tabSizeSelectEl.onchange = (event) => {
@@ -216,7 +220,7 @@ onDocumentReady(() => {
     const messageHTML = getChatMessage(username, message, "right");
     chatContainerEl.insertAdjacentHTML("beforeend", messageHTML);
     chatContainerEl.scrollTo({ top: chatContainerEl.scrollHeight });
-    socket.emit("sendMessage", message);
+    socket.emit("chatMessage", message);
   };
 
   chatDrawerEl.addEventListener("shown.bs.offcanvas", () => {
@@ -229,7 +233,7 @@ onDocumentReady(() => {
     activePeopleListEl.innerHTML = getPeopleList(users);
   });
 
-  socket.on("message", ({ username, message }) => {
+  socket.on("chatMessage", ({ username, message }) => {
     if (chatDrawerEl.style.visibility !== "visible") {
       unreadMessageCountEl.hidden = false;
       unreadMessageCountEl.textContent =
@@ -243,6 +247,11 @@ onDocumentReady(() => {
   socket.on("codeChange", (code) => {
     const currentCursorPosition = codeEditor.getCursorPositionScreen();
     codeEditor.setValue(code, currentCursorPosition);
+  });
+
+  socket.on("langChange", ({ lang }) => {
+    modeSelectEl.value = lang;
+    codeEditor.setOption("mode", lang);
   });
 
   socket.on("notification", (message) => {
