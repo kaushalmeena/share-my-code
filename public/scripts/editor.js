@@ -22,12 +22,9 @@ function handleEditorChange() {
 }
 
 function getFileExtension() {
-  let extension = "txt";
   const modeValue = codeEditor.getOption("mode");
   const modeItem = modeList.modes.find((item) => item.mode === modeValue);
-  if (modeItem) {
-    [extension] = modeItem.extensions.split("|");
-  }
+  const extension = modeItem ? modeItem.extensions.split("|")[0] : "txt";
   return extension;
 }
 
