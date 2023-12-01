@@ -5,25 +5,20 @@ const languageTools = ace.require("ace/ext/language_tools");
 
 const socket = io();
 
-function debounce(func, delay) {
-  let timer;
-  return (...args) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => func.apply(this, args), delay);
-  };
-}
-
-function handleCodeEditorChange() {
+function handleEditorChange() {
   let prevCode = "";
+  let timeoutId;
 
-  return debounce(() => {
-    const code = codeEditor.getValue();
-    if (code === prevCode) {
-      return;
-    }
-    socket.emit("updateCode", code);
-    prevCode = code;
-  }, 1500);
+  return () => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      const code = codeEditor.getValue();
+      if (code !== prevCode) {
+        socket.emit("updateCode", code);
+        prevCode = code;
+      }
+    }, 1500);
+  };
 }
 
 function getFileExtension() {
@@ -37,14 +32,16 @@ function getFileExtension() {
 }
 
 function saveFile(text, name, type) {
-  const a = document.createElement("a");
   const file = new Blob([text], { type });
-  a.href = URL.createObjectURL(file);
-  a.download = name;
-  a.click();
+  const url = URL.createObjectURL(file);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = name;
+  link.click();
+  URL.revokeObjectURL(url);
 }
 
-function createToast(message) {
+function getToastHTML(message) {
   return `
     <div role="alert" aria-live="assertive" aria-atomic="true" class="toast">
       <div class="toast-body">${message}</div>
@@ -52,19 +49,19 @@ function createToast(message) {
   `;
 }
 
-function createHTMLElement(html) {
-  const template = document.createElement("template");
-  template.innerHTML = html.trim();
-  return template.content.firstChild;
+function getHTMLElement(html) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, "text/html");
+  return doc.body.firstChild;
 }
 
 function showToast(message, container) {
-  const toastHTML = createToast(message);
-  const toastEl = createHTMLElement(toastHTML);
-  const Toast = bootstrap.Toast.getOrCreateInstance(toastEl, { delay: 2000 });
+  const toastHTML = getToastHTML(message);
+  const toastEl = getHTMLElement(toastHTML);
+  const Toast = new bootstrap.Toast(toastEl, { delay: 2000 });
   container.append(toastEl);
   Toast.show();
-  toastEl.addEventListener(
+  Toast.addEventListener(
     "hidden.bs.toast",
     () => {
       toastEl.remove();
@@ -73,12 +70,11 @@ function showToast(message, container) {
   );
 }
 
-function createChatMessage(username, message, type = "right") {
+function getChatMessage(username, message, type = "right") {
   const date = new Date();
-  const time = date.toLocaleString("en-US", {
+  const time = date.toLocaleTimeString("en-US", {
     hour: "numeric",
-    minute: "numeric",
-    hour12: true
+    minute: "numeric"
   });
   return `
     <div class="chat-bubble chat-bubble-${type} px-3 py-1">
@@ -89,7 +85,7 @@ function createChatMessage(username, message, type = "right") {
   `;
 }
 
-function createPeopleList(users) {
+function getPeopleList(users) {
   let html = "";
   for (let i = 0; i < users.length; i += 1) {
     html += `
@@ -102,7 +98,10 @@ function createPeopleList(users) {
 }
 
 function onDocumentReady(fn) {
-  if (document.readyState !== "loading") {
+  if (
+    document.readyState === "complete" ||
+    document.readyState === "interactive"
+  ) {
     fn();
   } else {
     document.addEventListener("DOMContentLoaded", fn);
@@ -151,7 +150,7 @@ onDocumentReady(() => {
     enableLiveAutocompletion: true
   });
 
-  codeEditor.on("change", handleCodeEditorChange());
+  codeEditor.on("change", handleEditorChange());
 
   modeSelectEl.onchange = (event) => {
     codeEditor.setOption("mode", event.target.value);
@@ -176,18 +175,15 @@ onDocumentReady(() => {
     saveFile(content, filename, "text/plain");
   };
 
-  copyButtonEl.onclick = () => {
-    navigator.clipboard
-      .writeText(shareInputEl.value)
-      .then(() => {
-        showToast("Link copied to clipboard!", toastContainerEl);
-      })
-      .catch(() => {
-        showToast("Could not copy text!", toastContainerEl);
-      })
-      .finally(() => {
-        ShareModal.hide();
-      });
+  copyButtonEl.onclick = async () => {
+    try {
+      await navigator.clipboard.writeText(shareInputEl.value);
+      showToast("Link copied to clipboard!", toastContainerEl);
+    } catch (error) {
+      showToast("Could not copy text!", toastContainerEl);
+    } finally {
+      ShareModal.hide();
+    }
   };
 
   joinButtonEl.onclick = () => {
@@ -217,8 +213,8 @@ onDocumentReady(() => {
   chatButtonEl.onclick = () => {
     const username = usernameInputEl.value;
     const message = chatInputEl.value;
-    const messageHTML = createChatMessage(username, message, "right");
-    chatContainerEl.innerHTML += messageHTML;
+    const messageHTML = getChatMessage(username, message, "right");
+    chatContainerEl.insertAdjacentHTML("beforeend", messageHTML);
     chatContainerEl.scrollTo({ top: chatContainerEl.scrollHeight });
     socket.emit("sendMessage", message);
   };
@@ -230,7 +226,7 @@ onDocumentReady(() => {
 
   socket.on("usersChange", (users) => {
     activePeopleCountEl.innerHTML = users.length;
-    activePeopleListEl.innerHTML = createPeopleList(users);
+    activePeopleListEl.innerHTML = getPeopleList(users);
   });
 
   socket.on("message", ({ username, message }) => {
@@ -239,7 +235,7 @@ onDocumentReady(() => {
       unreadMessageCountEl.textContent =
         Number.parseInt(unreadMessageCountEl.textContent, 10) + 1;
     }
-    const messageHTML = createChatMessage(username, message, "left");
+    const messageHTML = getChatMessage(username, message, "left");
     chatContainerEl.innerHTML += messageHTML;
     chatContainerEl.scrollTo({ top: chatContainerEl.scrollHeight });
   });
