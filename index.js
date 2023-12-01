@@ -80,10 +80,10 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("codeChange", (code) => {
+  socket.on("codeChange", (deltas) => {
     const user = userStore.fetchUser(socket.id);
     if (user) {
-      socket.in(user.room).emit("codeChange", code);
+      socket.in(user.room).emit("codeChange", deltas);
     }
   });
 

@@ -5,22 +5,6 @@ const languageTools = ace.require("ace/ext/language_tools");
 
 const socket = io();
 
-function handleEditorChange() {
-  let prevCode = "";
-  let timeoutId;
-
-  return () => {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => {
-      const code = codeEditor.getValue();
-      if (code !== prevCode) {
-        socket.emit("codeChange", code);
-        prevCode = code;
-      }
-    }, 1500);
-  };
-}
-
 function getFileExtension() {
   const modeValue = codeEditor.getOption("mode");
   const modeItem = modeList.modes.find((item) => item.mode === modeValue);
@@ -147,7 +131,12 @@ onDocumentReady(() => {
     enableLiveAutocompletion: true
   });
 
-  codeEditor.on("change", handleEditorChange());
+  codeEditor.on("change", (delta) => {
+    if (window.ignoreEditorChangeEvent) {
+      return;
+    }
+    socket.emit("codeChange", [delta]);
+  });
 
   modeSelectEl.onchange = (event) => {
     codeEditor.setOption("mode", event.target.value);
@@ -241,14 +230,15 @@ onDocumentReady(() => {
     chatContainerEl.scrollTo({ top: chatContainerEl.scrollHeight });
   });
 
-  socket.on("codeChange", (code) => {
-    const currentCursorPosition = codeEditor.getCursorPositionScreen();
-    codeEditor.setValue(code, currentCursorPosition);
-  });
-
   socket.on("langChange", ({ lang }) => {
     modeSelectEl.value = lang;
     codeEditor.setOption("mode", lang);
+  });
+
+  socket.on("codeChange", (deltas) => {
+    window.ignoreEditorChangeEvent = true;
+    codeEditor.session.doc.applyDeltas(deltas);
+    window.ignoreEditorChangeEvent = false;
   });
 
   socket.on("notification", (message) => {
