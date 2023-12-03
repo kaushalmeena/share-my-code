@@ -78,6 +78,22 @@ function getPeopleList(users) {
   return html;
 }
 
+function handleCodeChange() {
+  let prevCode = "";
+  let timeoutId;
+
+  return () => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      const code = codeEditor.getValue();
+      if (code !== prevCode) {
+        socket.emit("codeChange", code);
+        prevCode = code;
+      }
+    }, 1500);
+  };
+}
+
 function onDocumentReady(fn) {
   if (
     document.readyState === "complete" ||
@@ -131,12 +147,7 @@ onDocumentReady(() => {
     enableLiveAutocompletion: true
   });
 
-  codeEditor.on("change", (delta) => {
-    if (window.ignoreEditorChangeEvent) {
-      return;
-    }
-    socket.emit("codeChange", [delta]);
-  });
+  codeEditor.on("change", handleCodeChange());
 
   modeSelectEl.onchange = (event) => {
     codeEditor.setOption("mode", event.target.value);
@@ -235,10 +246,9 @@ onDocumentReady(() => {
     codeEditor.setOption("mode", lang);
   });
 
-  socket.on("codeChange", (deltas) => {
-    window.ignoreEditorChangeEvent = true;
-    codeEditor.session.doc.applyDeltas(deltas);
-    window.ignoreEditorChangeEvent = false;
+  socket.on("codeChange", (code) => {
+    const cursorPosition = codeEditor.getCursorPositionScreen();
+    codeEditor.setValue(code, cursorPosition);
   });
 
   socket.on("notification", (message) => {
