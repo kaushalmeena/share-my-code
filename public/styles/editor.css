@@ -1,41 +1,25 @@
-.toast-container {
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  z-index: 15;
-  padding: 16px;
-}
-
-.btn-group-toolbar {
+.toolbar-container {
   position: absolute;
-  top: 56px;
+  top: 3.5rem;
   right: 0;
 }
 
 .editor-container {
   position: relative;
   overflow: auto;
-  height: calc(100vh - 56px);
-}
-
-.code-editor {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  height: calc(100vh - 3.5rem);
 }
 
 .chat-container {
   overflow: auto;
-  height: calc(100vh - 140px);
+  height: calc(100vh - 8.75rem);
   scroll-behavior: smooth;
 }
 
 .chat-bubble {
   position: relative;
-  margin: 20px 20px;
-  max-width: 250px;
+  margin: 1.25rem;
+  max-width: 16rem;
 }
 
 .chat-bubble-left {
@@ -47,10 +31,10 @@
   top: 0;
   right: auto;
   bottom: auto;
-  left: -20px;
+  left: -1.25rem;
   width: 0;
   height: 0;
-  border: 22px solid;
+  border: 1.25rem solid;
   border-color: var(--bs-gray-dark) transparent transparent transparent;
   content: " ";
 }
@@ -63,16 +47,12 @@
 .chat-bubble-right:after {
   position: absolute;
   top: 0;
-  right: -20px;
+  right: -1.25rem;
   bottom: auto;
   left: auto;
   width: 0;
   height: 0;
-  border: 22px solid;
+  border: 1.25rem solid;
   border-color: var(--bs-blue) transparent transparent transparent;
   content: " ";
-}
-
-.badge {
-  z-index: 10;
 }
