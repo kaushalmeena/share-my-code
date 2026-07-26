@@ -2,7 +2,7 @@
 
 # Share My Code
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-3DA639?logo=opensourceinitiative&logoColor=white)](LICENSE) [![Node.js](https://img.shields.io/badge/Node.js-lts-5FA04E?logo=node.js&logoColor=white)](https://nodejs.org/) [![socket.io](https://img.shields.io/badge/socket.io-latest-010101?logo=socket.io&logoColor=white)](https://socket.io/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-3DA639?logo=opensourceinitiative&logoColor=white)](LICENSE) [![Node.js](https://img.shields.io/badge/Node.js-lts-5FA04E?logo=node.js&logoColor=white)](https://nodejs.org/) [![socket.io](https://img.shields.io/badge/socket.io-latest-4C6EF5?logo=socket.io&logoColor=white)](https://socket.io/)
 
 **Realtime code editor sharing with socket.io.**
 
