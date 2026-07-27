@@ -12,7 +12,7 @@ Realtime editing with live cursors and conflict-free merging, built on [Yjs](htt
 No account, nothing to install, and **nothing is lost** when you reload or
 drop offline.
 
-[**Try it live**](https://sharemycode.onrender.com/)
+[**Try it live**](https://prod-share-my-code.onrender.com/)
 
 </div>
 
