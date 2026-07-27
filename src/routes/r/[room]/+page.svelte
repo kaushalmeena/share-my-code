@@ -3,6 +3,7 @@
   import { fade, slide } from "svelte/transition";
   import CodeEditor from "$components/CodeEditor.svelte";
   import ConnectionStatus from "$components/ConnectionStatus.svelte";
+  import GithubLink from "$components/GithubLink.svelte";
   import SettingsPanel from "$components/SettingsPanel.svelte";
   import SharePanel from "$components/SharePanel.svelte";
   import Toolbar from "$components/Toolbar.svelte";
@@ -113,9 +114,12 @@
     <span class="sm:hidden">
       <ConnectionStatus status={session.status} synced={session.synced} />
     </span>
-    <span class="hidden sm:inline">
-      {session.participants.length}
-      {session.participants.length === 1 ? "person" : "people"} here
+    <span class="flex items-center gap-3">
+      <span class="hidden sm:inline">
+        {session.participants.length}
+        {session.participants.length === 1 ? "person" : "people"} here
+      </span>
+      <GithubLink size={14} />
     </span>
   </footer>
 

@@ -2,6 +2,7 @@
   import { fade } from "svelte/transition";
   import { goto } from "$app/navigation";
   import { resolve } from "$app/paths";
+  import GithubLink from "$components/GithubLink.svelte";
   import Logo from "$components/Logo.svelte";
   import { ROOM_ID_PATTERN, hostTokenStorageKey } from "$lib/config";
 
@@ -111,4 +112,13 @@
     </li>
     <li>As the creator, you can make a pad read-only for everyone else.</li>
   </ul>
+
+  <div
+    class="text-muted mt-8 flex items-center justify-center gap-3 border-t pt-4
+      text-xs"
+    style:border-color="var(--color-line)"
+  >
+    <GithubLink size={14} label />
+    <span>Open source, MIT licensed.</span>
+  </div>
 </main>
