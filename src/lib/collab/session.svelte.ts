@@ -79,6 +79,9 @@ export class RoomSession {
    */
   color = $state("");
 
+  /** Whether anyone holds this room's host token, per the relay. */
+  #hasHost = $state(false);
+
   #provider: WebsocketProvider;
   #persistence: IndexeddbPersistence;
   #settingsMap: Y.Map<unknown>;
@@ -226,6 +229,7 @@ export class RoomSession {
           this.#settingsMap.get(SETTINGS_KEYS.guestsCanEdit) !== false,
         title: asString(this.#settingsMap.get(SETTINGS_KEYS.title)) ?? ""
       };
+      this.#hasHost = this.#settingsMap.get(SETTINGS_KEYS.hostClaimed) === true;
     };
 
     read();
@@ -312,17 +316,37 @@ export class RoomSession {
     this.#applyPresence(presence);
   }
 
+  /**
+   * Whether this participant may change room settings — language, title and the
+   * edit lock. Only whoever created the pad can, and the relay reverts anyone
+   * else, so the UI keeps these controls disabled for guests.
+   *
+   * Rooms nobody claimed stay open: there is no host to reserve settings for.
+   */
+  get canEditSettings(): boolean {
+    return this.isHost || !this.#hasHost;
+  }
+
+  /**
+   * Write a room setting. Guarded rather than merely hidden in the UI: a guest
+   * write would be reverted by the relay, and skipping it avoids a visible
+   * flicker on the way.
+   */
+  #setSetting(key: string, value: unknown): void {
+    if (!this.canEditSettings) return;
+    this.#settingsMap.set(key, value);
+  }
+
   setLanguage(language: string): void {
-    this.#settingsMap.set(SETTINGS_KEYS.language, language);
+    this.#setSetting(SETTINGS_KEYS.language, language);
   }
 
   setTitle(title: string): void {
-    this.#settingsMap.set(SETTINGS_KEYS.title, title);
+    this.#setSetting(SETTINGS_KEYS.title, title);
   }
 
-  /** Host only. Guests get rejected by the relay, so do not offer them the UI. */
   setGuestsCanEdit(allowed: boolean): void {
-    this.#settingsMap.set(SETTINGS_KEYS.guestsCanEdit, allowed);
+    this.#setSetting(SETTINGS_KEYS.guestsCanEdit, allowed);
   }
 
   /** Replace the whole document, e.g. after an upload. */

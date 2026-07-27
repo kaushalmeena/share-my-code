@@ -104,11 +104,41 @@ The token is stored in the creator's `localStorage`. The server persists only
 its SHA-256, never the token itself. The client sends it as a query parameter
 when opening the relay socket; a matching hash marks that connection as host.
 
-When the host turns off _Guests can edit_, the relay drops write messages from
-every non-host connection. Enforcing this server-side matters: a read-only
-editor is a UI convention that anyone can bypass with devtools.
+The host holds two distinct privileges, enforced differently because the
+failure modes differ:
 
-A room with no registered host stays open — nobody could have locked it.
+| Privilege                                               | Enforcement         |
+| ------------------------------------------------------- | ------------------- |
+| Lock the pad (_Guests can edit_ off)                    | Reject guest writes |
+| Change room settings — language, title, the lock itself | Revert guest writes |
+
+Both are enforced server-side. A disabled control is a UI convention anyone can
+undo with devtools, so neither is left to the client.
+
+A room with no registered host stays open on both counts — nobody could have
+locked it, and there is no host to reserve settings for. Clients learn which
+case they are in from a relay-written `hostClaimed` flag in the settings map;
+without it a guest could not tell "not the host" from "no host exists".
+
+### Reject versus revert
+
+Rejecting a write and reverting it are not interchangeable.
+
+**Content** is rejected. Dropping the update is the only option — the relay
+cannot un-type someone's characters without inventing an edit.
+
+**Settings** are reverted: the write lands, then the relay immediately puts the
+old value back and broadcasts the correction. Rejecting them instead would be
+actively worse for two reasons. A dropped update leaves a permanent gap in that
+client's clock sequence and mutes everything they send afterwards (below). And
+settings changes travel in the same updates as ordinary text, so refusing one
+could discard innocent typing with it. Reverting keeps the guest in sync; the
+worst case is a brief flicker on a client that ignored its own disabled
+controls.
+
+The relay deliberately sends no permission-denied message for a reverted
+setting. That message marks a client as diverged and prompts a reload, which
+would be wrong here — the correction already restored sync.
 
 ### The one race
 

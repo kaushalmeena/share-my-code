@@ -22,7 +22,15 @@ export const DOC_KEYS = {
 export const SETTINGS_KEYS = {
   language: "language",
   guestsCanEdit: "guestsCanEdit",
-  title: "title"
+  title: "title",
+  /**
+   * Relay-owned, not a user setting: marks that someone holds this room's host
+   * token. It rides in the settings map so clients learn it through the normal
+   * sync, and the relay reverts anyone but the host who touches it. Without it
+   * a client could not tell an unclaimed room — where settings are open to
+   * everyone — from one it simply is not the host of.
+   */
+  hostClaimed: "hostClaimed"
 } as const;
 
 /** Room ids look like `abcd-efgh-jkmn` — short enough to read aloud. */

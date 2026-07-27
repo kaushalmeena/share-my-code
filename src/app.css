@@ -195,6 +195,13 @@
     outline: none;
   }
 
+  /* Reads as "not yours to change" without looking broken. */
+  .field:disabled {
+    color: var(--color-muted);
+    background: var(--color-surface);
+    cursor: not-allowed;
+  }
+
   .label {
     @apply mb-1.5 block text-xs tracking-wide uppercase;
     color: var(--color-muted);

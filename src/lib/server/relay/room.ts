@@ -21,6 +21,8 @@ const PERSIST_MAX_WAIT_MS = 10_000;
 
 /** Origin tag for updates we applied from disk, so they are not re-broadcast. */
 const HYDRATION_ORIGIN = Symbol("hydration");
+/** Origin tag for corrections the relay itself writes. */
+const RELAY_ORIGIN = Symbol("relay");
 
 export type Connection = {
   socket: WebSocket;
@@ -45,6 +47,7 @@ export class Room {
   hostTokenHash: string | null = null;
 
   #store: SnapshotStore;
+  #settings: Y.Map<unknown>;
   #persistTimer: ReturnType<typeof setTimeout> | null = null;
   #persistDeadline: ReturnType<typeof setTimeout> | null = null;
   #dirty = false;
@@ -54,12 +57,14 @@ export class Room {
   constructor(id: string, store: SnapshotStore) {
     this.id = id;
     this.#store = store;
+    this.#settings = this.doc.getMap(DOC_KEYS.settings);
     this.awareness = new awarenessProtocol.Awareness(this.doc);
     // The relay is a conduit, not a participant.
     this.awareness.setLocalState(null);
 
     this.doc.on("update", this.#onDocUpdate);
     this.awareness.on("update", this.#onAwarenessUpdate);
+    this.#settings.observe(this.#onSettingsChange);
   }
 
   /** Restore a previous snapshot, if one exists. Call once, before serving. */
@@ -86,10 +91,55 @@ export class Room {
    */
   get guestsCanEdit(): boolean {
     if (!this.hostTokenHash) return true;
-    const settings = this.doc.getMap(DOC_KEYS.settings);
     // Unset means "never locked".
-    return settings.get(SETTINGS_KEYS.guestsCanEdit) !== false;
+    return this.#settings.get(SETTINGS_KEYS.guestsCanEdit) !== false;
   }
+
+  /**
+   * Room settings belong to the host alone — language, title and the edit lock.
+   *
+   * This is a *correction* rather than a rejection, and the distinction matters.
+   * Dropping the offending update would leave a permanent gap in that client's
+   * clock sequence, and Yjs would hold everything they sent afterwards pending
+   * on the missing dependency, muting them for good (see `#denyWrite`). Settings
+   * changes also travel in the same updates as ordinary text edits, so refusing
+   * one could discard innocent typing along with it.
+   *
+   * Instead the relay lets the write land and immediately puts the old value
+   * back, then broadcasts that correction to everyone. The relay stays
+   * authoritative, the guest stays in sync, and the worst case is a brief
+   * flicker on a client that ignored its own disabled controls.
+   */
+  #onSettingsChange = (event: Y.YMapEvent<unknown>) => {
+    const from = this.#asConnection(event.transaction.origin);
+    // Not from a socket (our own correction, or hydration), or from the host.
+    if (!from || from.isHost) return;
+    // Nobody claimed this room, so there is no host to reserve settings for.
+    if (!this.hostTokenHash) return;
+
+    // Capture now: the event is only valid during this callback.
+    const restore = [...event.changes.keys].map(([key, change]) => ({
+      key,
+      action: change.action,
+      oldValue: change.oldValue as unknown
+    }));
+    if (restore.length === 0) return;
+
+    // Applied outside the observer callback so we are not mutating the map
+    // Yjs is still dispatching events for.
+    queueMicrotask(() => {
+      if (this.#destroyed) return;
+      this.doc.transact(() => {
+        for (const { key, action, oldValue } of restore) {
+          if (action === "add") this.#settings.delete(key);
+          else this.#settings.set(key, oldValue);
+        }
+      }, RELAY_ORIGIN);
+      // Deliberately no permission-denied message: that flags the client as
+      // diverged and prompts a reload, which would be wrong here. The
+      // correction already put this connection back in sync.
+    });
+  };
 
   get isEmpty(): boolean {
     return this.connections.size === 0;
@@ -327,6 +377,11 @@ export class Room {
   /** Record ownership of this room and persist it right away. */
   async claim(hostTokenHash: string): Promise<void> {
     this.hostTokenHash = hostTokenHash;
+    // Publish the fact so clients can tell "not the host" from "no host at
+    // all", which decides whether settings are open to them.
+    this.doc.transact(() => {
+      this.#settings.set(SETTINGS_KEYS.hostClaimed, true);
+    }, RELAY_ORIGIN);
     this.#dirty = true;
     await this.flush();
   }
@@ -337,6 +392,7 @@ export class Room {
     await this.flush();
     this.doc.off("update", this.#onDocUpdate);
     this.awareness.off("update", this.#onAwarenessUpdate);
+    this.#settings.unobserve(this.#onSettingsChange);
     this.awareness.destroy();
     this.doc.destroy();
   }

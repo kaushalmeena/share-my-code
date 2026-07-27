@@ -29,8 +29,8 @@ drop offline.
   reconnect.
 - **Live presence** — see who is in the pad and where their cursor is, each
   person in their own colour.
-- **Host controls** — whoever creates a pad can make it read-only for everyone
-  else, enforced by the server rather than just hidden in the UI.
+- **Host controls** — only whoever created a pad can change its language, title
+  or make it read-only, enforced by the server rather than just hidden in the UI.
 - **25 languages, 4 themes** — grammars load on demand, so the initial download
   stays small.
 

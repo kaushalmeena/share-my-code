@@ -108,6 +108,45 @@ console.log(
     : "PASS — client that circumvented the lock stays muted until it resets"
 );
 
+// --- room settings are the host's alone ------------------------------------
+// A guest with a normal, unlocked pad still must not change language, title or
+// the edit lock. The relay reverts them rather than rejecting, so the guest
+// stays in sync and simply loses the change.
+const settingsDoc = new Y.Doc();
+const settingsProvider = await connect(settingsDoc, {});
+const originalLanguage = settingsDoc.getMap("settings").get("language");
+
+settingsDoc.getMap("settings").set("language", "python");
+settingsDoc.getMap("settings").set("title", "hijacked");
+settingsDoc.getMap("settings").set("guestsCanEdit", true);
+await new Promise((r) => setTimeout(r, 900));
+
+const hostSettings = hostDoc.getMap("settings").toJSON();
+const guestSettings = settingsDoc.getMap("settings").toJSON();
+console.log("host settings after guest write:", JSON.stringify(hostSettings));
+console.log(
+  hostSettings.language !== "python" && hostSettings.title !== "hijacked"
+    ? "PASS — relay reverted the guest's settings change"
+    : "FAIL — guest changed room settings"
+);
+console.log(
+  guestSettings.language === hostSettings.language &&
+    guestSettings.title === hostSettings.title
+    ? "PASS — guest converged back onto the host's settings"
+    : "FAIL — guest left diverged from the room"
+);
+void originalLanguage;
+
+// The host, meanwhile, can still change them.
+hostDoc.getMap("settings").set("language", "rust");
+await new Promise((r) => setTimeout(r, 600));
+console.log(
+  settingsDoc.getMap("settings").get("language") === "rust"
+    ? "PASS — host can still change settings"
+    : "FAIL — host settings change did not propagate"
+);
+
 hostProvider.destroy();
 guestProvider.destroy();
+settingsProvider.destroy();
 process.exit(0);

@@ -28,6 +28,12 @@
 
   const prefs = $derived(preferences.value);
 
+  const hostOnly = $derived(
+    session.canEditSettings
+      ? undefined
+      : "Only whoever created this pad can change its settings."
+  );
+
   function rename(name: string) {
     const trimmed = name.slice(0, 32);
     preferences.update({ name: trimmed });
@@ -43,14 +49,25 @@
 
 <Panel {open} title="Settings" {onClose}>
   <div class="space-y-8">
-    <!-- Room-wide: everyone sees these change. -->
+    <!--
+      Room-wide, and reserved for whoever created the pad — everyone else sees
+      these disabled. The relay reverts any change from a guest, so this is the
+      polite face of a rule enforced server-side, not the rule itself.
+    -->
     <section class="space-y-4">
-      <h3 class="text-muted text-xs tracking-wide uppercase">Room</h3>
+      <div class="flex items-baseline justify-between gap-2">
+        <h3 class="text-muted text-xs tracking-wide uppercase">Room</h3>
+        {#if !session.canEditSettings}
+          <span class="text-muted text-xs">Host only</span>
+        {/if}
+      </div>
 
       <Select
         label="Language"
         value={session.settings.language}
         options={languageOptions}
+        disabled={!session.canEditSettings}
+        title={hostOnly}
         onChange={(value) => session.setLanguage(value)}
       />
 
@@ -63,19 +80,19 @@
           maxlength="60"
           placeholder="Untitled pad"
           value={session.settings.title}
+          disabled={!session.canEditSettings}
+          title={hostOnly}
           oninput={(event) => session.setTitle(event.currentTarget.value)}
         />
       </div>
 
-      <!-- Guests see this disabled. The `title` carries the reason without
-           putting a line of explanatory text under every host control. -->
       <Toggle
         label="Guests can edit"
-        title={session.isHost
+        title={session.canEditSettings
           ? "Turn off to make this pad read-only for everyone but you."
-          : "Only the room's host can change this."}
+          : hostOnly}
         checked={session.settings.guestsCanEdit}
-        disabled={!session.isHost}
+        disabled={!session.canEditSettings}
         onChange={(checked) => session.setGuestsCanEdit(checked)}
       />
     </section>
