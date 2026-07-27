@@ -1,0 +1,24 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  width="24"
+  height="24"
+  fill="none"
+  stroke="#4d7cff"
+  stroke-width="2.25"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <!--
+    Lucide's `code-xml` glyph, the same one `Logo.svelte` renders, so the
+    browser tab and the in-app wordmark stay identical.
+
+    Deliberately transparent and drawn in one fixed mid-luminance blue rather
+    than a theme colour. At roughly 4:1 against white and 5:1 against black it
+    stays legible in a light or dark tab bar without a second asset, and
+    without a prefers-color-scheme switch that some tab bars ignore.
+  -->
+  <path d="m18 16 4-4-4-4" />
+  <path d="m6 8-4 4 4 4" />
+  <path d="m14.5 4-5 16" />
+</svg>
