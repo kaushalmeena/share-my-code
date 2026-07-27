@@ -1,6 +1,20 @@
-# Dependency directories
+# Dependencies
 node_modules/
+
+# Build output
+build/
+.svelte-kit/
+
+# Runtime room snapshots
+.data/
+
+# Environment
+.env
+.env.*
+!.env.example
 
 # Misc
 .DS_Store
 .vscode
+*.log
+.claude/

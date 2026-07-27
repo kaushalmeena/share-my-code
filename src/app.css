@@ -1,0 +1,229 @@
+@import "tailwindcss";
+
+/**
+ * Design language: flat, monochrome, zero radius, single-pixel borders.
+ * Colour is reserved for participant cursors, so presence is the only thing
+ * on screen that draws the eye.
+ */
+
+@theme {
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono:
+    ui-monospace, "SF Mono", "JetBrains Mono", "Fira Code", Menlo, Consolas,
+    monospace;
+
+  --radius-none: 0;
+
+  /* Overridden per theme below; declared here so Tailwind emits the utilities. */
+  --color-canvas: #ffffff;
+  --color-surface: #f6f6f6;
+  --color-line: #d9d9d9;
+  --color-ink: #171717;
+  --color-muted: #6f6f6f;
+  --color-danger: #b42318;
+
+  /*
+   * The single brand colour, identical in every theme. Mid-luminance on
+   * purpose so it clears ~4:1 on white and ~5:1 on black.
+   */
+  --color-brand: #4d7cff;
+
+  /* One motion scale, so panels and controls feel like the same system. */
+  --ease-out-flat: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --duration-fast: 120ms;
+  --duration-base: 180ms;
+  --duration-slow: 240ms;
+}
+
+/*
+ * Honour a reduced-motion preference globally rather than per-component: the
+ * Svelte transitions below read these same durations.
+ */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+    --duration-slow: 0ms;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Every corner is square, everywhere. */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    border-radius: 0 !important;
+  }
+}
+
+/* Themes set only these seven variables; everything else derives from them. */
+
+:root,
+[data-theme="paper"] {
+  color-scheme: light;
+  --color-canvas: #ffffff;
+  --color-surface: #f6f6f6;
+  --color-line: #d9d9d9;
+  --color-ink: #171717;
+  --color-muted: #6f6f6f;
+  --color-danger: #b42318;
+  --color-selection: #d5d5d5;
+}
+
+[data-theme="sepia"] {
+  color-scheme: light;
+  --color-canvas: #faf4e8;
+  --color-surface: #f2e9d8;
+  --color-line: #ddd0b8;
+  --color-ink: #322a1d;
+  --color-muted: #7c6f5a;
+  --color-danger: #a5321b;
+  --color-selection: #e2d3b4;
+}
+
+[data-theme="ink"] {
+  color-scheme: dark;
+  --color-canvas: #0b0b0b;
+  --color-surface: #161616;
+  --color-line: #2c2c2c;
+  --color-ink: #ededed;
+  --color-muted: #8b8b8b;
+  --color-danger: #ff6b60;
+  --color-selection: #333333;
+}
+
+[data-theme="slate"] {
+  color-scheme: dark;
+  --color-canvas: #0e1319;
+  --color-surface: #161d26;
+  --color-line: #283340;
+  --color-ink: #dde5ee;
+  --color-muted: #8496a8;
+  --color-danger: #ff7a6e;
+  --color-selection: #2f3d4d;
+}
+
+@layer base {
+  html,
+  body {
+    height: 100%;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: -2px;
+  }
+
+  ::selection {
+    background: var(--color-selection);
+  }
+}
+
+@layer components {
+  /* Shared shape for every clickable control. */
+  .control {
+    @apply inline-flex items-center justify-center gap-2 border px-3 py-1.5 text-sm leading-none select-none;
+    border-color: var(--color-line);
+    color: var(--color-ink);
+    background: transparent;
+    transition:
+      background-color var(--duration-fast) var(--ease-out-flat),
+      border-color var(--duration-fast) var(--ease-out-flat),
+      color var(--duration-fast) var(--ease-out-flat),
+      opacity var(--duration-fast) var(--ease-out-flat);
+  }
+
+  .control:hover:not(:disabled) {
+    background: var(--color-surface);
+    border-color: var(--color-ink);
+  }
+
+  .control:active:not(:disabled) {
+    background: var(--color-selection);
+  }
+
+  .control:disabled {
+    color: var(--color-muted);
+    cursor: not-allowed;
+  }
+
+  .control-primary {
+    background: var(--color-ink);
+    color: var(--color-canvas);
+    border-color: var(--color-ink);
+  }
+
+  .control-primary:hover:not(:disabled) {
+    opacity: 0.85;
+    background: var(--color-ink);
+    border-color: var(--color-ink);
+  }
+
+  .field {
+    @apply w-full border px-3 py-2 text-sm;
+    background: var(--color-canvas);
+    border-color: var(--color-line);
+    color: var(--color-ink);
+    transition:
+      border-color var(--duration-fast) var(--ease-out-flat),
+      background-color var(--duration-fast) var(--ease-out-flat);
+  }
+
+  .field:hover:not(:disabled):not(:read-only) {
+    border-color: var(--color-muted);
+  }
+
+  .field:focus {
+    border-color: var(--color-ink);
+    outline: none;
+  }
+
+  .label {
+    @apply mb-1.5 block text-xs tracking-wide uppercase;
+    color: var(--color-muted);
+  }
+}
+
+/*
+ * Theme swaps repaint the whole page. A short cross-fade on the large
+ * surfaces keeps that from reading as a flash, while text and borders switch
+ * instantly so nothing looks smeared mid-transition.
+ */
+@layer base {
+  body {
+    transition: background-color var(--duration-base) var(--ease-out-flat);
+  }
+}
+
+/* -- CodeMirror ----------------------------------------------------------
+ *
+ * Editor styling lives in `src/lib/editor/themes.ts`, not here. CodeMirror
+ * injects its defaults as a `baseTheme` whose generated class prefixes outrank
+ * ordinary stylesheet selectors, so rules written in this file would be
+ * silently ignored. Only the outer container is safe to style from CSS.
+ */
+
+.cm-editor {
+  height: 100%;
+}
+
+.cm-editor.cm-focused {
+  outline: none;
+}
