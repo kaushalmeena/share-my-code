@@ -1,8 +1,8 @@
 {
-  "name": "myapp-sharemycode",
+  "name": "share-my-code",
   "version": "2.0.0",
   "description": "Realtime collaborative code pad. Create a room, share the link, edit together.",
-  "repository": "git@github.com:kaushalmeena/myapp-sharemycode.git",
+  "repository": "git@github.com:kaushalmeena/share-my-code.git",
   "license": "MIT",
   "type": "module",
   "author": {

@@ -78,11 +78,11 @@ To install and run this project you need:
 
 To set up everything on your local machine, follow these steps:
 
-1. Clone this repo and then change directory to the `myapp-sharemycode` folder:
+1. Clone this repo and then change directory to the `share-my-code` folder:
 
 ```bash
-git clone https://github.com/kaushalmeena/myapp-sharemycode.git
-cd myapp-sharemycode
+git clone https://github.com/kaushalmeena/share-my-code.git
+cd share-my-code
 ```
 
 2. Install project dependencies using npm:
@@ -141,8 +141,8 @@ page requests and WebSocket upgrades.
 The [Dockerfile](Dockerfile) builds a self-contained image:
 
 ```bash
-docker build -t sharemycode .
-docker run -p 3000:3000 -v sharemycode-data:/data sharemycode
+docker build -t share-my-code .
+docker run -p 3000:3000 -v share-my-code-data:/data share-my-code
 ```
 
 Mount a persistent volume at `/data` — pad snapshots are written there, and on
@@ -165,7 +165,7 @@ working default; the settings are listed in
 ## Contributing
 
 Contributions are welcome! If you find a bug or have a feature request, please
-[open an issue](https://github.com/kaushalmeena/myapp-sharemycode/issues/new/choose)
+[open an issue](https://github.com/kaushalmeena/share-my-code/issues/new/choose)
 first to discuss it. For code changes, fork the repository, create a branch,
 and open a pull request.
 
