@@ -1,4 +1,6 @@
 <script lang="ts" generics="T extends string">
+  import ChevronDown from "@lucide/svelte/icons/chevron-down";
+
   type Option = { value: T; label: string };
   type Props = {
     value: T;
@@ -24,15 +26,30 @@
 
 <label class="block" {title}>
   {#if label}<span class="label">{label}</span>{/if}
-  <select
-    class="field appearance-none pr-8 enabled:cursor-pointer"
-    style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 10 6%22><path d=%22M0 0l5 6 5-6z%22 fill=%22currentColor%22/></svg>'); background-repeat: no-repeat; background-position: right 10px center; background-size: 9px;"
-    {value}
-    {disabled}
-    onchange={(event) => onChange(event.currentTarget.value as T)}
-  >
-    {#each options as option (option.value)}
-      <option value={option.value}>{option.label}</option>
-    {/each}
-  </select>
+
+  <!--
+    The chevron is a real element, not a `background-image` data URI. A data URI
+    is its own document, so `currentColor` inside one resolves to black rather
+    than inheriting this element's colour — it stayed black in every theme and
+    ignored the disabled state. As an element it inherits both for free.
+  -->
+  <span class="relative block">
+    <select
+      class="field appearance-none pr-9 enabled:cursor-pointer"
+      {value}
+      {disabled}
+      onchange={(event) => onChange(event.currentTarget.value as T)}
+    >
+      {#each options as option (option.value)}
+        <option value={option.value}>{option.label}</option>
+      {/each}
+    </select>
+    <ChevronDown
+      size={15}
+      class={[
+        "pointer-events-none absolute top-1/2 right-3 -translate-y-1/2",
+        disabled ? "text-muted" : "text-ink"
+      ]}
+    />
+  </span>
 </label>

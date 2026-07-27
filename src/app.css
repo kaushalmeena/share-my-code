@@ -195,9 +195,29 @@
     outline: none;
   }
 
-  /* Reads as "not yours to change" without looking broken. */
-  .field:disabled {
+  /* Browsers default placeholders to a partly transparent ink, which reads
+     lighter than `--color-muted`. Pinning it keeps an empty text field looking
+     the same weight as a select showing its value. */
+  .field::placeholder {
     color: var(--color-muted);
+    opacity: 1;
+  }
+
+  /*
+   * Reads as "not yours to change" without looking broken. Every disabled
+   * field lands on the same three values — muted text, surface fill, unchanged
+   * border — whether it is a text input showing a placeholder or a select
+   * showing its value. `-webkit-text-fill-color` is what actually wins on
+   * WebKit, which greys disabled controls itself and ignores `color`.
+   */
+  .field:disabled,
+  .field:disabled::placeholder {
+    color: var(--color-muted);
+    -webkit-text-fill-color: var(--color-muted);
+    opacity: 1;
+  }
+
+  .field:disabled {
     background: var(--color-surface);
     cursor: not-allowed;
   }
