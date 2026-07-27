@@ -7,6 +7,15 @@ FROM node:22-alpine AS build
 WORKDIR /app
 
 COPY package.json package-lock.json ./
+# `npm ci` is strict on purpose: it fails rather than silently resolving around
+# a lockfile that does not match package.json.
+#
+# It is also stricter here than on a dev machine. Tailwind's `@tailwindcss/oxide`
+# ships a platform binary per target plus a wasm fallback, and that fallback's
+# own dependencies must be in the lockfile even though a linux/musl build never
+# loads it. Always regenerate the lockfile with a full `npm install` — never
+# `npm install --package-lock-only`, which prunes those subtrees and produces a
+# lockfile that installs fine on macOS and fails this line.
 RUN npm ci
 
 COPY . .
