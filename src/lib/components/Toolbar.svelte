@@ -39,7 +39,7 @@
     <span class="truncate text-sm">
       {session.settings.title || "Untitled pad"}
     </span>
-    <span class="text-muted hidden shrink-0 text-xs md:inline">
+    <span class="hidden shrink-0 text-xs text-muted md:inline">
       {language}
     </span>
     {#if !session.canEdit}
@@ -71,7 +71,7 @@
 
   <button
     type="button"
-    class="control h-8 w-8 shrink-0 px-0!"
+    class="control size-8 shrink-0 px-0!"
     aria-label="Settings"
     onclick={onSettings}
   >

@@ -58,13 +58,13 @@
     <span>ShareMyCode</span>
   </a>
 
-  <p class="text-muted font-mono text-xs tracking-widest uppercase">
+  <p class="font-mono text-xs tracking-widest text-muted uppercase">
     Error {page.status}
   </p>
   <h1 class="mt-2 text-2xl font-medium tracking-tight">
     {explanation.heading}
   </h1>
-  <p class="text-muted mt-3 text-sm leading-relaxed">
+  <p class="mt-3 text-sm/relaxed text-muted">
     {explanation.body}
   </p>
 

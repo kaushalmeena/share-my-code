@@ -54,7 +54,7 @@
     role="dialog"
     aria-modal="true"
     aria-label={title}
-    class="fixed top-0 right-0 z-50 flex h-full w-full max-w-sm flex-col
+    class="fixed top-0 right-0 z-50 flex size-full max-w-sm flex-col
       border-l outline-none"
     style:background="var(--color-canvas)"
     style:border-color="var(--color-line)"
@@ -67,7 +67,7 @@
       <h2 class="text-sm tracking-wide uppercase">{title}</h2>
       <button
         type="button"
-        class="control h-7 w-7 px-0!"
+        class="control size-7 px-0!"
         aria-label="Close {title}"
         onclick={onClose}
       >

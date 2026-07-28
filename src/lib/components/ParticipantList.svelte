@@ -39,7 +39,7 @@
   <div class="flex items-center gap-1" aria-hidden="true">
     {#each visible as participant (participant.id)}
       <span
-        class="h-2.5 w-2.5 shrink-0"
+        class="size-2.5 shrink-0"
         style:background={participant.color}
         style:outline={participant.isSelf
           ? "1px solid var(--color-muted)"
@@ -48,11 +48,11 @@
       ></span>
     {/each}
     {#if overflow > 0}
-      <span class="text-muted text-[10px]">+{overflow}</span>
+      <span class="text-[10px] text-muted">+{overflow}</span>
     {/if}
   </div>
 
-  <span class="text-muted max-w-40 truncate text-xs">
+  <span class="max-w-40 truncate text-xs text-muted">
     {summary}
   </span>
 </div>

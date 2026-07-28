@@ -38,10 +38,10 @@
     has-disabled:cursor-not-allowed"
   {title}
 >
-  <span class="relative mt-px flex h-4.5 w-4.5 shrink-0 items-center">
+  <span class="relative mt-px flex size-4.5 shrink-0 items-center">
     <input
       type="checkbox"
-      class="peer h-4.5 w-4.5 cursor-pointer appearance-none border
+      class="peer size-4.5 cursor-pointer appearance-none border
         transition-colors disabled:cursor-not-allowed disabled:opacity-40"
       style:border-color={checked ? "var(--color-ink)" : "var(--color-line)"}
       style:background={checked ? "var(--color-ink)" : "transparent"}
@@ -52,7 +52,7 @@
     />
     {#if checked}
       <svg
-        class="pointer-events-none absolute left-0.75 h-3 w-3"
+        class="pointer-events-none absolute left-0.75 size-3"
         viewBox="0 0 12 12"
         fill="none"
         aria-hidden="true"
@@ -68,14 +68,13 @@
   </span>
 
   <span class="min-w-0 select-none">
-    <!-- One class expression rather than `class=` plus a `class:` directive:
-         the Tailwind Prettier plugin mangles that combination while rewriting
-         arbitrary values, and it leaked the rewritten name into the text. -->
-    <span class={["block text-sm leading-4.5", disabled && "text-muted"]}>
+    <!-- One class expression rather than `class=` plus a `class:` directive,
+         so the conditional class stays part of the linted class list. -->
+    <span class={["block text-sm/4.5", disabled && "text-muted"]}>
       {label}
     </span>
     {#if description}
-      <span class="text-muted mt-1 block text-xs leading-snug">
+      <span class="mt-1 block text-xs/snug text-muted">
         {description}
       </span>
     {/if}

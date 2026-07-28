@@ -56,9 +56,9 @@
     -->
     <section class="space-y-4">
       <div class="flex items-baseline justify-between gap-2">
-        <h3 class="text-muted text-xs tracking-wide uppercase">Room</h3>
+        <h3 class="text-xs tracking-wide text-muted uppercase">Room</h3>
         {#if !session.canEditSettings}
-          <span class="text-muted text-xs">Host only</span>
+          <span class="text-xs text-muted">Host only</span>
         {/if}
       </div>
 
@@ -99,7 +99,7 @@
 
     <!-- Local: nobody else is affected. -->
     <section class="space-y-4">
-      <h3 class="text-muted text-xs tracking-wide uppercase">You</h3>
+      <h3 class="text-xs tracking-wide text-muted uppercase">You</h3>
 
       <div>
         <label class="label" for="display-name">Display name</label>
@@ -120,7 +120,7 @@
           {#each PARTICIPANT_COLORS as color (color)}
             <button
               type="button"
-              class="h-7 w-7 border-2"
+              class="size-7 border-2"
               style:background={color}
               style:border-color={session.color === color
                 ? "var(--color-ink)"
@@ -135,7 +135,7 @@
     </section>
 
     <section class="space-y-4">
-      <h3 class="text-muted text-xs tracking-wide uppercase">Editor</h3>
+      <h3 class="text-xs tracking-wide text-muted uppercase">Editor</h3>
 
       <Select
         label="Theme"
@@ -150,7 +150,7 @@
         </label>
         <input
           id="font-size"
-          class="accent-ink w-full"
+          class="w-full accent-ink"
           type="range"
           min={MIN_FONT_SIZE}
           max={MAX_FONT_SIZE}

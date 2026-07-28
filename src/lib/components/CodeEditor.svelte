@@ -116,4 +116,4 @@
   }
 </script>
 
-<div class="h-full w-full overflow-hidden" bind:this={host}></div>
+<div class="size-full overflow-hidden" bind:this={host}></div>

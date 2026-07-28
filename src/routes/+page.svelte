@@ -56,7 +56,7 @@
     <Logo size={26} />
     <span>ShareMyCode</span>
   </h1>
-  <p class="text-muted mt-2 text-sm">
+  <p class="mt-2 text-sm text-muted">
     A collaborative code pad. Create one, share the link, edit together in
     realtime. No account, nothing to install.
   </p>
@@ -71,7 +71,7 @@
       {creating ? "Creating…" : "Create a pad"}
     </button>
 
-    <div class="text-muted flex items-center gap-3 text-xs">
+    <div class="flex items-center gap-3 text-xs text-muted">
       <span class="h-px flex-1" style:background="var(--color-line)"></span>
       <span>or join one</span>
       <span class="h-px flex-1" style:background="var(--color-line)"></span>
@@ -94,7 +94,7 @@
 
     {#if error}
       <p
-        class="text-danger text-sm"
+        class="text-sm text-danger"
         role="alert"
         transition:fade={{ duration: 160 }}
       >
@@ -103,7 +103,7 @@
     {/if}
   </div>
 
-  <ul class="text-muted mt-12 space-y-2 text-xs">
+  <ul class="mt-12 space-y-2 text-xs text-muted">
     <li>
       Edits merge without conflicts, so two people can type in the same line.
     </li>
@@ -114,8 +114,8 @@
   </ul>
 
   <div
-    class="text-muted mt-8 flex items-center justify-center gap-3 border-t pt-4
-      text-xs"
+    class="mt-8 flex items-center justify-center gap-3 border-t pt-4 text-xs
+      text-muted"
     style:border-color="var(--color-line)"
   >
     <GithubLink size={14} label />

@@ -1,4 +1,5 @@
 import js from "@eslint/js";
+import betterTailwind from "eslint-plugin-better-tailwindcss";
 import prettier from "eslint-config-prettier";
 import svelte from "eslint-plugin-svelte";
 import globals from "globals";
@@ -42,6 +43,39 @@ export default ts.config(
         parser: ts.parser,
         svelteConfig
       }
+    }
+  },
+  {
+    // Tailwind class linting. `entryPoint` points the plugin at the real
+    // stylesheet so the theme and any custom utilities in `app.css` are
+    // recognised instead of being reported as unknown classes.
+    files: ["**/*.svelte", "**/*.svelte.ts", "**/*.ts"],
+    plugins: { "better-tailwindcss": betterTailwind },
+    settings: {
+      "better-tailwindcss": {
+        entryPoint: "src/app.css",
+        // `.control`, `.field`, `.label` and friends are defined in
+        // `@layer components` in the entry stylesheet. Without this they are
+        // reported as unknown classes.
+        detectComponentClasses: true
+      }
+    },
+    rules: {
+      ...betterTailwind.configs["recommended-warn"].rules,
+
+      // Class ordering used to be handled by prettier-plugin-tailwindcss.
+      // It lives here now, so keep it an error to preserve that guarantee.
+      "better-tailwindcss/enforce-consistent-class-order": "error",
+
+      // Correctness rather than style, so these fail the build.
+      // `no-conflicting-classes` catches two utilities fighting over the same
+      // property, where stylesheet order silently decides the winner.
+      "better-tailwindcss/no-conflicting-classes": "error",
+      "better-tailwindcss/no-unknown-classes": "error",
+
+      // Prettier owns formatting — letting this rule wrap class lists too
+      // would give two tools authority over the same bytes.
+      "better-tailwindcss/enforce-consistent-line-wrapping": "off"
     }
   },
   {

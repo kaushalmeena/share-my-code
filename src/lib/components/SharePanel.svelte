@@ -56,7 +56,7 @@
           {/if}
         </button>
       </div>
-      <p class="text-muted mt-2 text-xs">
+      <p class="mt-2 text-xs text-muted">
         Anyone with this link can open the pad. No account needed.
       </p>
     </section>
@@ -67,17 +67,17 @@
         {#each session.participants as participant (participant.id)}
           <li class="flex items-center gap-2 text-sm">
             <span
-              class="inline-block h-3 w-3 shrink-0"
+              class="inline-block size-3 shrink-0"
               style:background={participant.color}
               aria-hidden="true"
             ></span>
             <span class="truncate">{participant.name}</span>
             {#if participant.isSelf}
-              <span class="text-muted text-xs">(you)</span>
+              <span class="text-xs text-muted">(you)</span>
             {/if}
           </li>
         {:else}
-          <li class="text-muted text-sm">Just you so far.</li>
+          <li class="text-sm text-muted">Just you so far.</li>
         {/each}
       </ul>
     </section>

@@ -99,15 +99,15 @@
         <CodeEditor {session} />
       </div>
     {:else}
-      <div class="text-muted flex h-full items-center justify-center text-sm">
+      <div class="flex h-full items-center justify-center text-sm text-muted">
         Opening pad…
       </div>
     {/if}
   </main>
 
   <footer
-    class="text-muted flex h-8 shrink-0 items-center justify-between border-t
-      px-3 text-xs"
+    class="flex h-8 shrink-0 items-center justify-between border-t px-3
+      text-xs text-muted"
     style:border-color="var(--color-line)"
   >
     <span class="font-mono">{data.roomId}</span>
@@ -134,7 +134,7 @@
     onClose={() => (settingsPanelOpen = false)}
   />
 {:else}
-  <div class="text-muted flex flex-1 items-center justify-center text-sm">
+  <div class="flex flex-1 items-center justify-center text-sm text-muted">
     Opening pad…
   </div>
 {/if}

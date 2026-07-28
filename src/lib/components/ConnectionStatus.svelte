@@ -52,12 +52,12 @@
 </script>
 
 <span
-  class="text-muted inline-flex items-center gap-1.5 text-xs whitespace-nowrap"
+  class="inline-flex items-center gap-1.5 text-xs whitespace-nowrap text-muted"
   title={state.detail}
 >
   <span
     class={[
-      "inline-block h-2 w-2 shrink-0 transition-colors",
+      "inline-block size-2 shrink-0 transition-colors",
       state.tone === "busy" && "animate-pulse"
     ]}
     style:background={dotColor}
