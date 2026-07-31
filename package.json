@@ -17,11 +17,12 @@
     "build": "vite build && node scripts/build-relay.js",
     "preview": "npm run build && node server.js",
     "start": "node server.js",
-    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "check": "npm run lint && npm run typecheck",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "lint": "prettier --check . && eslint .",
     "lint:fix": "prettier --write . && eslint . --fix",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "typecheck": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.19.0",
