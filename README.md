@@ -105,16 +105,10 @@ process and one port to worry about.
 
 ### Testing
 
-To type-check the project:
+To lint, check formatting and typecheck together:
 
 ```bash
 npm run check
-```
-
-To lint and check formatting:
-
-```bash
-npm run lint
 ```
 
 With a dev server running, this exercises the host edit lock end to end over
@@ -148,19 +142,31 @@ docker run -p 3000:3000 -v share-my-code-data:/data share-my-code
 Mount a persistent volume at `/data` — pad snapshots are written there, and on
 an ephemeral filesystem every pad is lost on restart. Everything else has a
 working default; the settings are listed in
-[Configuration](docs/architecture.md#configuration).
+[Configuration](docs/runtime.md#configuration).
 
 > Run a **single instance**. The relay keeps rooms in memory, so two instances
 > would each hold a copy of the same pad and diverge permanently. See the
-> [scaling notes](docs/architecture.md#scaling) for the ways around it.
+> [scaling notes](docs/modules.md#scaling) for the ways around it.
 
 ## Documentation
 
-- **[Architecture](docs/architecture.md)** — the three sync layers, the
-  WebSocket protocol and its one sharp edge, how host permissions are enforced,
-  persistence, and the limits worth knowing before scaling it.
-- **[Design](docs/design.md)** — colour tokens and theming, typography, motion,
-  component conventions, and the accessibility commitments.
+Full documentation is available in the [`/docs`](./docs) directory.
+
+**Core Concepts:**
+
+- [How Sync Works](./docs/overview.md) — the problem, the three layers that solve it, and why this is not peer-to-peer.
+- [Wire Protocol and Permissions](./docs/protocol.md) — what goes over the socket, and who is allowed to do what once it arrives.
+- [Persistence and Process Model](./docs/runtime.md) — where documents are stored, how the processes are arranged, and which layer owns which state.
+
+**Design System:**
+
+- [Foundations](./docs/foundations.md) — the guiding principle, the token set, the themes and the type scale.
+- [Layout and Motion](./docs/layout.md) — how space is organised, and what is allowed to move.
+- [Components, Icons and Voice](./docs/components.md) — the recurring patterns, and the accessibility rules they follow.
+
+**Advanced:**
+
+- [Module Layout and Scaling](./docs/modules.md) — a map of the source tree, and what would have to change to run more than one node.
 
 ## Contributing
 
